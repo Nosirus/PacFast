@@ -1,0 +1,170 @@
+#!/bin/bash
+
+set -e
+set -u
+
+#### DEFINE VARIABLES ####
+
+#Stand-in variables
+update=0
+
+#Setting Global variables
+
+setVars() {
+MIRRORLIST="/etc/pacman.d/mirrorlist"
+#Look for required commands and files
+COMMANDSARRAY=(bash grep sed pacman sudo)
+FILESARRAY=("$MIRRORLIST")
+MIRRORS=($(getMirrors))
+declare -a PACKAGELIST
+
+#Download script variables
+SCRIPTNAME="archPackageDownloader.sh"
+DOWNLOADDIR="./downloads"
+ARIAFILELIST="$DOWNLOADDIR/fileList"
+LOGFILE="$DOWNLOADDIR/aria.log"
+ARIAOPTIONS="--dir=$DOWNLOADDIR --log=$LOGFILE --continue --lowest-speed-limit=1K --max-connection-per-server=2 --min-split-size=1M --split=5 --input-file=$ARIAFILELIST --max-concurrent-downloads=1"
+}
+
+####
+
+#### FUNCTIONS ####
+
+main () {
+setVars
+findCommands
+findFiles
+updateDB
+PACKAGELIST=($(getPackageList))
+echoScript > $SCRIPTNAME
+}
+
+findCommands () {
+for com in ${COMMANDSARRAY[@]}
+do
+  if [[ $(which $com) ]]
+  then 
+    echo "$com found"
+  else
+    echo "Please install $com"
+    exit 1
+  fi
+done
+}
+
+findFiles () {
+for file in ${FILESARRAY[@]}
+do
+  if [[ -f $file ]]
+  then
+    echo "$file found"
+  else
+    echo "$file not found"
+    exit 1
+  fi
+done
+}
+
+getMirrors () {
+  grep -e ^Server $MIRRORLIST | sed -e 's/Server = //; s/\/$repo.*//'
+}
+
+getPackageList () {
+  pacman -Sup | sed 's/.*\(\/.*\/os\/\)/\1/; /^\//!d'
+}
+
+updateDB () {
+  echo "Do you want to update your package database? [Y/n]"
+  read -p ">>> " update
+  case $update in
+    y|Y|"")
+      sudo pacman -Sy
+    ;;
+  esac
+}
+
+
+
+#### SCRIPT BUILDER
+
+echoScript () {
+  echo "#!/bin/bash
+
+echo \"
+#################################################
+#	THIS IS AN AUTO-GENERATED SCRIPT 	#
+#	FOR DOWNLOADING ARCH LINUX PACKAGES	#
+#################################################
+\"
+
+set -e
+set -u
+
+#### VARIABLES ####
+setVars () {
+COMMANDSARRAY=(bash aria2c)
+DOWNLOADDIR=\"$DOWNLOADDIR\"
+ARIAFILELIST=\"$ARIAFILELIST\"
+LOGFILE=\"$LOGFILE\"
+ARIAOPTIONS=\"$ARIAOPTIONS\"
+}
+####
+
+#### FUNCTIONS ####
+
+main () {
+setVars
+findCommands
+mkFilesFolders
+createFileList
+startDownload
+}
+
+findCommands () {
+for com in \${COMMANDSARRAY[@]}
+do
+  if [[ \$(which \$com) ]]
+  then 
+    echo \"\$com found\"
+  else
+    echo \"Please install \$com\"
+    exit 1
+  fi
+done
+}
+
+mkFilesFolders () {
+  [[ ! -d \"$DOWNLOADDIR\" ]] && mkdir -p \"$DOWNLOADDIR\"
+  touch \"$ARIAFILELIST\"
+  touch \"$LOGFILE\"
+}
+
+createFileList () {
+  echo \"$(ariaFileListBuilder)\" > $ARIAFILELIST
+}
+
+startDownload () {
+  aria2c $ARIAOPTIONS
+}
+
+####
+
+#### ACTION ####
+main
+"
+
+chmod +x $SCRIPTNAME
+}
+
+ariaFileListBuilder () {
+  for package in ${PACKAGELIST[@]}
+  do
+    echo ${MIRRORS[@]/%/$package} | sed 's/ /\t/g'
+    echo ""
+  done
+}
+
+#### 
+
+#### ACTION ####
+main
