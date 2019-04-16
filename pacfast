@@ -108,7 +108,7 @@ On_Cya='\e[1;106m';
 On_Whi='\e[1;107m';
 
 echo -e "\n\e ${On_Gre} Downloading: ${ORANGE} $number $total $suffix \e[0m" "\n"
-echo -e "\n\e ${On_Gre} Downloading: ${test2} $number $total $suffix \e[0m" "\n" $namever
+echo -e "\n\e ${On_Gre} Downloading: \e${test2} $number $total $suffix \e[0m" "\n" $namever
   
   
   #echo "Total size of installed packages is $total $suffix"
