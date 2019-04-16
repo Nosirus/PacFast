@@ -62,7 +62,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   echo $(printf $namever | wc -l) "Package(s)"
   echo $(echo $namever\n | wc -l) "Package(s)"
   echo -e $namever | wc -l
-  echo "$name" | wc -l
+  echo "$namever" | wc -l
   
   
 suffix='B'
