@@ -85,7 +85,7 @@ fi
   echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
 #echo -e $name | column -t | fmt -w $COLUMNS -t 
-echo -e "$name" | column -t
+echo -e $name | column -t
 
 
   aria2c $list $ARIA2C
