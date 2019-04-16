@@ -76,7 +76,8 @@ if [ $( echo "$total > 1024" | bc ) = 1 ]; then
 fi
   #echo -e "\n\e[1;42m Downloading: \e[0m" "\n" $namever | fmt -c -w $COLUMNS #-c
   
-  echo -e "\n\e[1;42m Downloading: \e[0m" " $number Package(s)" $total $suffix "\n" $namever | fmt -c -w $COLUMNS #-c
+  echo -e "\n\e[1;42m Downloading: \e[0m" "[1;37m "$number Package(s)" $total $suffix [0m" "\n" $namever | fmt -c -w $COLUMNS #-c
+  
   
   #echo "Total size of installed packages is $total $suffix"
   #echo $list
