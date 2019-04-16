@@ -88,7 +88,7 @@ fi
 echo -e $namever | fmt -w $COLUMNS | column -t
 
 for value in "${namever[@]}"; do 
-    printf "%-15s\n" "${namever}"
+    printf "%-50s\n" "${namever}"
 done | column #-x
 
 
