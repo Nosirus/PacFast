@@ -25,14 +25,17 @@ function center() {
   printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$1" 0 "$(((termwidth-1-${#1})/2))" "$padding"
 }
 
-function log_msg() {
+log_msg() {
     RED=$(tput setaf 1)
     GREEN=$(tput setaf 2)
     NORMAL=$(tput sgr0)
     MSG="$1"
-    let COL=$(tput cols)-${#MSG}+${#GREEN}+${#NORMAL}
+    STATUS="[OK]"
+    STATUSCOLOR="$GREEN${STATUS}$NORMAL"
+    let COL=$(tput cols)-${#MSG}+${#STATUSCOLOR}-${#STATUS}
 
-    printf "%s%${COL}s" "$MSG" "$GREEN[OK]$NORMAL"
+    echo -n $MSG
+    printf "%${COL}s\n"  "$STATUSCOLOR"
 }
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
