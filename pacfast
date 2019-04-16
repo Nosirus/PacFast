@@ -59,7 +59,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   #echo $(printf $LIST | wc -m) "Package(s)"
   repository=$(pacman $@ --print --print-format "%r")
   
-  if echo "$@" | grep -q "\-l"; then
+  if echo "$@" | grep -q "\-lp"; then
   echo "L !!"
   fi
 
