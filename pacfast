@@ -82,7 +82,7 @@ On_Green='\e[1;97;42m'
 
 #echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
 
-test=$(echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever)
+test=$(echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m")
   
   #log_msg "Hello World"
   center "$test"
