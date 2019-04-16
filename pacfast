@@ -107,7 +107,7 @@ On_Pur='\033[1;105m';
 On_Cya='\033[1;106m';
 On_Whi='\033[1;107m';
 
-echo -e "\n\e ${On_Gre} Downloading: ${ORANGE} $number $total $suffix \e[0m" "\n"
+echo -e "\n\e ${On_Gre} Downloading: \e${test2} $number $total $suffix \e[0m" "\n"
 echo -e "\n\e ${On_Gre} Downloading: ${test2} $number $total $suffix \e[0m" "\n" $namever
   
   
