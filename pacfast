@@ -95,7 +95,7 @@ NC='\033[0m' # No Color
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
 
-echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
+#echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
 function prompt_right() {
   echo -e "\033[0;36m$(echo ${RANDOM})\033[0m"
 }
@@ -108,7 +108,8 @@ function prompt() {
     compensate=11
     PS1=$(printf "%*s\r%s\n\$ " "$(($(tput cols)+${compensate}))" "$(prompt_right)" "$(prompt_left)")
 }
-PROMPT_COMMAND=prompt
+PROMPT_COMMAND=prompt_right
+echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
 
   
   
