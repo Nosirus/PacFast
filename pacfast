@@ -85,7 +85,7 @@ fi
   echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
 
-echo $list | cut -d, -f4,5-6 | column -t -s, entitlement 
+echo $list | cut -d, -f4,5-6 | column -t
 
 
   aria2c $list $ARIA2C
