@@ -34,7 +34,7 @@ log_msg() {
     let COL=$(tput cols)-${#MSG}+${#STATUSCOLOR}-${#STATUS}
 
     echo -n $MSG
-    printf "%${COL}s"  "$STATUSCOLOR"
+    printf "%${COL}"  "$STATUSCOLOR"
 }
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
