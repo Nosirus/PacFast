@@ -99,9 +99,7 @@ NC='\033[0m' # No Color
 On_Green='\033[1;42m'
 
 
-echo -e "\n\e ${Green} Downloading: ${White} $number $total $suffix \e[0m" "\n" $namever
-echo -e "\033[38;5;205mhotpink\033[m"
-echo -e "\033[38;2;243;134;48mgiant goldfish\033[0m"
+echo -e "\n\e ${Green} Downloading: ${Gold} $number $total $suffix \e[0m" "\n" $namever
 
   
   
