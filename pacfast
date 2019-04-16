@@ -78,7 +78,7 @@ fi
   
 ORANGE='\033[1;33m'
 WHITE='\033[1;37m'
-On_White='\033[47m' 
+On_White='\033[0;47m' 
 NC='\033[0m' # No Color
 printf "${ORANGE}Downloading: ${NC} Stack Overflow\n"
 
