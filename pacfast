@@ -84,7 +84,7 @@ echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total 
 
 #echo -e "\n$namever" " " | fmt -c -w $COLUMNS
 
-echo "$namever" | fold -w 30
+echo $namever | fold -w 30
 
 
 exit 1
