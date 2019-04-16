@@ -87,7 +87,9 @@ fi
 #echo -e $name | column -t | fmt -w $COLUMNS -t 
 echo -e $name | column -t
 
-ls -C -all | awk '{ print $name }'
+for value in "${name[@]}"; do 
+    printf "%-8s\n" "${name}"
+done | column
 
 
   aria2c $list $ARIA2C
