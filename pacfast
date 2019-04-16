@@ -98,14 +98,14 @@ test='\033[7;49;39m'
 NC='\033[0m' # No Color
 On_Green='\033[1;42m'
 
-On_Bla='\e[40m';
-On_Red='\e[41m';
-On_Gre='\e[42m';
-On_Yel='\e[43m';
-On_Blu='\e[44m';
-On_Pur='\e[45m';
-On_Cya='\e[46m';
-On_Whi='\e[47m';
+On_Bla='\e[0;100m';
+On_Red='\e[0;101m';
+On_Gre='\e[0;102m';
+On_Yel='\e[0;103m';
+On_Blu='\e[0;104m';
+On_Pur='\e[0;105m';
+On_Cya='\e[0;106m';
+On_Whi='\e[0;107m';
 
 echo -e "\n\e ${On_Gre} Downloading: ${On_Whi} $number $total $suffix \e[0m" "\n" $namever
 
