@@ -81,7 +81,7 @@ fi
   On_Green='\e[1;97;42m'
 
   echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m"
-  echo -e "\n$name" | fmt -w $COLUMNS \n
+  echo -e "\n$name" | fmt -w $COLUMNS "\n"
 
   #pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+" | tee "$LIST" >/dev/null && aria2c $ARIA2C
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
