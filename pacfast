@@ -98,7 +98,7 @@ On_Green='\e[1;97;42m'
 echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
 
 
-echo "$status" | awk '{printf("%s %s %-20s %20s %s %s\n", $1, $2, $3, $4, $5, $6)}'
+echo "$status" | awk '{printf("%s %s %-20s %20s %s %s\n", $namever, $2, $3, $4, $5, $6)}'
 
   
   
