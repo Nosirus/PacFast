@@ -81,11 +81,11 @@ On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
 
 #echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
-
-test=$(echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m")
+  center "PacFast"
+echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
   
   #log_msg "Hello World"
-  center "$test"
+
 
 
 exit 1
