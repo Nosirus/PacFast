@@ -84,7 +84,13 @@ echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total 
 
 #echo -e "\n$namever" " " | fmt -c -w $COLUMNS
 
-echo $namever | awk '{ print "\t" $0 }'
+width=$(tput cols)
+while IFS= read -r line
+do 
+  printf "%${width}s\n" "$namever"
+done << EOF
+
+
 exit 1
 
   #center "Something I want to print"
