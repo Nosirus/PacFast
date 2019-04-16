@@ -84,7 +84,12 @@ fi
   echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m"
   echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
-  printf -v y %-40.40s $name
+
+ten="          " 
+forty="$ten$ten$ten$ten" 
+y=$list
+y="${y:0:40}${forty:0:$((40 - ${#y}))}"
+echo "'${y}'"
 
 
   aria2c $list $ARIA2C
