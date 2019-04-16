@@ -89,7 +89,7 @@ if [ $( echo "$total > 1024" | bc ) = 1 ]; then
 		fi
 	fi
 fi
-  #echo -e "\n\e[1;42m Downloading: \e[0m" "\n" $number | fmt -c -w $COLUMNS #-c
+  echo -e "\n\e[1;42m Downloading: \e[0m" "\n" $number | fmt -c -w $COLUMNS #-c
 
 ORANGE='\033[0;202'
 White='\033[1;37m'
