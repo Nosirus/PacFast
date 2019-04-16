@@ -88,8 +88,8 @@ fi
 echo -e $namever | fmt -w $COLUMNS | column -t
 
 for value in "${namever[@]}"; do 
-    printf "%-8s\n" "${namever}"
-done | column -x
+    printf "%-15s\n" "${namever}"
+done | column #-x
 
 
   aria2c $list $ARIA2C
