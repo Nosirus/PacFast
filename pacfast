@@ -82,7 +82,7 @@ On_Green='\e[1;97;42m'
 
 echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m"
 
-echo -e "\n$namever" " " | fmt -c -w $COLUMNS
+echo -e "\n$namever" " " | fmt  -w $COLUMNS
   
 
 exit 1
