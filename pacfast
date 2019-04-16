@@ -88,7 +88,7 @@ fi
 #echo -e $name | fmt -w $COLUMNS | column -t
 
 #echo " ${name[@]/%/$'\n'}" | column
-values=($name)
+values=($namever)
 #values=($*)
 longest_value=0
 
