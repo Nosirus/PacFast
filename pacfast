@@ -75,14 +75,15 @@ if [ $( echo "$total > 1024" | bc ) = 1 ]; then
 	fi
 fi
   echo -e "\n\e[1;42m Downloading: \e[0m" "\n" $number | fmt -c -w $COLUMNS #-c
-  
+
 ORANGE='\033[1;208m'
 WHITE='\033[1;37m'
-On_White='\033[47m' 
+On_White='\033[1;47m'
+On_Green='\033[1;42m'
 test='\033[01;36m'
 NC='\033[0m' # No Color
 
-echo -e "\n\e[0;33m Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
+echo -e "\n\e[0;33m Downloading: ${On_White} $number $total $suffix \e[0m" "\n" $namever
   
   
   #echo "Total size of installed packages is $total $suffix"
