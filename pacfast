@@ -21,7 +21,7 @@ function clean() {
 
 function center() {
   termwidth="$(tput cols)"
-  padding="$(printf '%0.1s' ={1..500})"
+  padding="$(printf '%0.1s' -{1..500})"
   printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$1" 0 "$(((termwidth-1-${#1})/2))" "$padding"
 }
 
@@ -58,11 +58,9 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   #echo $(printf $LIST | wc -m) "Package(s)"
   repository=$(pacman $@ --print --print-format "%r")
+  echo $(printf $list | wc -m) "Package(s)"
   
-  if echo "$@" | grep -q "\--show"; then
-  echo "L !!"
-  fi
-
+  
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
         total=$( echo "scale=2; $total / 1024" | bc )
