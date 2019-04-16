@@ -59,7 +59,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$namever" | wc -l)
-    list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+  list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   
   
 suffix='B'
@@ -84,7 +84,7 @@ fi
   echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m"
   echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
-  echo "${name}  "
+  echo -e "${name}  "
 
 
   aria2c $list $ARIA2C
