@@ -85,11 +85,7 @@ fi
   echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
 
-ten="          " 
-forty="$ten$ten$ten$ten" 
-y=$list
-y="${y:0:40}${forty:0:$((40 - ${#y}))}"
-echo "'${y}'"
+echo $list | cut -d, -f4,5-6 | column -t -s
 
 
   aria2c $list $ARIA2C
