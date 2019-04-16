@@ -105,7 +105,7 @@ On_Yel='\e[1;103m';
 On_Blu='\e[1;104m';
 On_Pur='\e[1;105m';
 On_Cya='\e[1;106m';
-On_Whi='\e[1;107m';
+On_Whi='\e[0;107m';
 
 echo -e "\n\e ${On_Gre} Downloading: ${On_Whi} $number $total $suffix \e[0m" "\n"
 echo -e "\n\e ${On_Green} Downloading: ${On_Whi} $number $total $suffix \e[0m" "\n" $namever
