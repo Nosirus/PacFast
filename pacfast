@@ -83,7 +83,7 @@ test='\033[01;36m'
 NC='\033[0m' # No Color
 printf "${ORANGE}Downloading: ${NC} Stack Overflow\n"
 
-echo -e "\n\e[0;33m Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever | fmt -c -w $COLUMNS #-c
+echo -e "\n\e[0;33m Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
   
   
   #echo "Total size of installed packages is $total $suffix"
