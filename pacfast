@@ -96,7 +96,7 @@ White='\033[1;37m'
 Gold='\033[1;208m'
 test='\033[7;49;39m'
 NC='\033[0m' # No Color
-On_Green='\033[1;42m'
+
 
 On_Bla='\e[1;100m';
 On_Red='\e[1;101m';
@@ -105,10 +105,10 @@ On_Yel='\e[1;103m';
 On_Blu='\e[1;104m';
 On_Pur='\e[1;105m';
 On_Cya='\e[1;106m';
-On_Whi='\e[1;107m';
+On_Whi='\e[7;107m';
 
 echo -e "\n\e ${On_Gre} Downloading: ${On_Whi} $number $total $suffix \e[0m" "\n"
-echo -e "\n\e ${On_Green} Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
+echo -e "\n\e ${On_Gre} Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
   
   
   #echo "Total size of installed packages is $total $suffix"
