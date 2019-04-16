@@ -91,7 +91,8 @@ for value in "${name[@]}"; do
     printf "%-50s\n" "${name}"
 done | column #-x
 
-echo " ${namever[@]/%/$'\n'}" | column
+echo " ${name[@]/%/$'\n'}" | column
+echo " ${name[@]/%/$'\n'}" | sed 's/^ //' | column
 
 
   aria2c $list $ARIA2C
