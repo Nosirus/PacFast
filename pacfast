@@ -87,12 +87,8 @@ fi
 #echo -e $name | column -t | fmt -w $COLUMNS -t 
 echo -e $namever | fmt -w $COLUMNS | column -t
 
-for value in "${name[@]}"; do 
-    printf "%-50s\n" "${name}"
-done | column #-x
+#echo " ${name[@]/%/$'\n'}" | column
 
-echo " ${name[@]/%/$'\n'}" | column
-echo " ${namever[@]/%/$'\n'}" | sed 's/^ //' | column
 
 
   aria2c $list $ARIA2C
