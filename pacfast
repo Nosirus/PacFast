@@ -76,9 +76,9 @@ if [ $( echo "$total > 1024" | bc ) = 1 ]; then
 fi
   #echo -e "\n\e[1;42m Downloading: \e[0m" "\n" $namever | fmt -c -w $COLUMNS #-c
   
-RED='\033[0;31m'
+ORANGE='\033[0;33m'
 NC='\033[0m' # No Color
-printf "I ${RED}love${NC} Stack Overflow\n"
+printf "${ORANGE}Downloading: ${NC} Stack Overflow\n"
   
   
   #echo "Total size of installed packages is $total $suffix"
