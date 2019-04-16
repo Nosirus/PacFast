@@ -84,7 +84,7 @@ echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total 
 
 #echo -e "\n$namever" " " | fmt -c -w $COLUMNS
 
-echo $namever | fold | awk '{ print "\t" $0 }'
+echo $namever | awk '{ print "\t" $0 }'
 exit 1
 
   #center "Something I want to print"
