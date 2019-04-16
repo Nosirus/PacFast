@@ -100,8 +100,7 @@ On_Green='\e[1;97;42m'
 echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
   
   #log_msg "Hello World"
-  #printf "%5s  " $namever
-  echo "  " $namever
+  printf "%5s  " $namever
 
 exit 1
 
