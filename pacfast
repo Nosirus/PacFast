@@ -26,8 +26,7 @@ function center() {
 }
 
 log_msg() {
-    RED=$(tput setaf 1)
-    GREEN=$(tput setaf 1)
+    GREEN=$(tput setaf 2)
     NORMAL=$(tput sgr0)
     MSG="$1"
     STATUS="[OK]"
@@ -35,7 +34,7 @@ log_msg() {
     let COL=$(tput cols)-${#MSG}+${#STATUSCOLOR}-${#STATUS}
 
     echo -n $MSG
-    printf "%${COL}s\n"  "$STATUSCOLOR"
+    printf "%${COL}s"  "$STATUSCOLOR"
 }
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
