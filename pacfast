@@ -98,15 +98,10 @@ On_Green='\e[1;97;42m'
 #echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
 
 echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m" "\n" $namever
-
-  echo "$namever $number" | awk '{printf "%15s%15s\n", $1,$2}'
-  
-  #echo "Total size of installed packages is $total $suffix"
-  #echo $list
   
   #log_msg "Hello World"
   #printf "%5s  " $namever
-  #echo "  " $namever
+  echo "  " $namever
 
 exit 1
 
