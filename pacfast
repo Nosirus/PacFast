@@ -104,7 +104,7 @@ NORMAL=$(tput sgr0)
 
 col=80 # change this to whatever column you want the output to start at
 
-  printf '%s%*s%s' "$GREEN" $col "[OK]" "$NORMAL"
+  printf '%s%*s%s' "$GREEN" $col $namever "$NORMAL"
 
   printf '%s%*s%s' "$RED" $col "[FAIL]" "$NORMAL"
 
