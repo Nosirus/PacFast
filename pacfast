@@ -83,7 +83,8 @@ On_Green='\e[1;97;42m'
 echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for total size $total $suffix \e[0m"
 echo -e "\n$name" | fmt -w $COLUMNS
 
-printf "\rFileName : %20s : %8d of %8d Completed" $name
+printf -v str2 %8s%s '' "$name"
+str2=${str2: -8}
 
 exit 1
 
