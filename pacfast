@@ -87,6 +87,8 @@ fi
 #echo -e $name | column -t | fmt -w $COLUMNS -t 
 echo -e $name | column -t
 
+ls -C -all | awk '{ print $name }'
+
 
   aria2c $list $ARIA2C
   printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
