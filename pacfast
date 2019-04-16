@@ -96,9 +96,10 @@ WHITE='\033[1;37m'
 Gold='\033[1;208m'
 test='\033[7;49;39m'
 NC='\033[0m' # No Color
+Green='\033[7;49;32m'
 
 
-echo -e "\n\e[0;33m Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
+echo -e "\n\e ${Green} Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
 
   
   
