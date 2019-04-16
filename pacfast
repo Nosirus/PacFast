@@ -87,9 +87,11 @@ fi
 #echo -e $name | column -t | fmt -w $COLUMNS -t 
 echo -e $namever | fmt -w $COLUMNS | column -t
 
-for value in "${namever[@]}"; do 
-    printf "%-50s\n" "${namever}"
+for value in "${name[@]}"; do 
+    printf "%-50s\n" "${name}"
 done | column #-x
+
+echo " ${name[@]/%/$'\n'}" | column
 
 
   aria2c $list $ARIA2C
