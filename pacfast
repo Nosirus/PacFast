@@ -77,7 +77,7 @@ fi
   #echo -e "\n\e[1;42m Downloading: \e[0m" "\n" $namever | fmt -c -w $COLUMNS #-c
   
 ORANGE='\033[0;33m'
-WHITE='[0;33m'
+WHITE='\033[0;33m'
 NC='\033[0m' # No Color
 printf "${ORANGE}Downloading: ${NC} Stack Overflow\n"
 
