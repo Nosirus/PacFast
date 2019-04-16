@@ -58,6 +58,10 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   #echo $(printf $LIST | wc -m) "Package(s)"
   repository=$(pacman $@ --print --print-format "%r")
+  
+  if echo "$@" | grep -q "\-l"; then
+  echo "L !!"
+  fi
 
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
