@@ -78,12 +78,12 @@ fi
 
 ORANGE='\033[1;208m'
 WHITE='\033[1;37m'
-On_White='\033[1;47m'
-On_Green='\033[1;208m'
-test='\033[01;36m'
+Gold='\033[1;208m'
+test='\033[30;48;5;82m'
 NC='\033[0m' # No Color
 
-echo -e "\n\e[0;33m Downloading: ${On_Green} $number $total $suffix \e[0m" "\n" $namever
+
+echo -e "\n\e[0;33m Downloading: ${test} $number $total $suffix \e[0m" "\n" $namever
   
   
   #echo "Total size of installed packages is $total $suffix"
