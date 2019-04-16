@@ -58,7 +58,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   #echo $(printf $LIST | wc -m) "Package(s)"
   repository=$(pacman $@ --print --print-format "%r")
-  echo $(printf $list | wc -m) "Package(s)"
+  echo $(printf $namever | wc -m) "Package(s)"
   
   
 suffix='B'
