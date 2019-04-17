@@ -2,7 +2,7 @@
 
 CACHE=$(pacman-conf Cachedir)
 SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
-ARIA2C="-d "$CACHE" -Z --continue=false -s4 -k5M -x10 -j10 -t10 \
+ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
 trap ctrl_c INT
