@@ -86,7 +86,7 @@ fi
 #echo -e $name | fmt -w $COLUMNS | column -t
 term_width=$(tput cols)
 (( columns = $term_width / ($longest_value + 2) ))
-echo -e $namever | column -c 1000 | fmt -w $term_width
+echo -e $namever | column -c 1000 -t RR  | fmt -w $term_width
 
 #echo "${name[@]/%/$'\n'}" | column 
 
