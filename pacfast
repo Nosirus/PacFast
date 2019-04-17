@@ -121,12 +121,12 @@ fi
   #echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
 echo -e $name | column -t | fmt -w $COLUMNS -t 
-echo -e $name | fmt -w $COLUMNS | column -t
+#echo -e $name | fmt -w $COLUMNS | column -t
 
 #echo " ${name[@]/%/$'\n'}" | column
 
-values=($name)
-column
+#values=($name)
+#column
 
 
   aria2c $list $ARIA2C
