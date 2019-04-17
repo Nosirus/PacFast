@@ -38,7 +38,7 @@ function print() (
     else
       col1=" "
     fi
-    printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]\n}"
+    printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
   done
 )
 
@@ -86,7 +86,7 @@ fi
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
   
-optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
+optd=$(echo $namever\t | xargs -n1 | sort | xargs)
 print "$optf" "$optd"
 
 #echo "${name[@]/%/$'\n'}" | column 
