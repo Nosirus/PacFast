@@ -19,6 +19,11 @@ function clean() {
   done
 }
 
+function clear() {
+  tput sc
+  tput rc;tput el
+}
+
 function center() {
   termwidth="$(tput cols)"
   padding="$(printf '%0.1s' -{1..500})"
@@ -86,14 +91,13 @@ fi
   optf=' -->'
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd"
-  tput sc
-  tput rc;tput el
   echo " "
 
 #echo "${name[@]/%/$'\n'}" | column 
 
   aria2c $list $ARIA2C
-  printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
+  clear
+  #printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
   
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
