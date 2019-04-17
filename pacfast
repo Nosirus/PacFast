@@ -97,6 +97,7 @@ fi
 
   aria2c $list $ARIA2C
   clear
+  clear
   #printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
   
   # Install package
