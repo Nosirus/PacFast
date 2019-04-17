@@ -25,6 +25,27 @@ function center() {
   printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$1" 0 "$(((termwidth-1-${#1})/2))" "$padding"
 }
 
+function column() {
+    local leftMargin=${left:-0}
+    local padding=${spacing:-2}
+    local maxWidth=$(( ${terminalWidth:-80} - $leftMargin ))
+    local values=("$@")
+    local max=$(( $(IFS=''; echo "${values[*]/%/$'\n'}" | wc -L) + $padding ))
+    local cols=$(( $maxWidth / $max ))
+
+    local pos=0 NL=''
+    for value in "${values[@]}"; do
+        [[ $pos == 0 ]] && {
+            printf "$NL%*s" "$leftMargin"
+            NL=$'\n'  # add newlines from now on...
+        }
+        printf "%-*s" "$max" "$value"
+        (( pos = ($pos + 1) % $cols ))
+    done
+    echo
+
+} 
+
 log_msg() {
     RED=$(tput setaf 2)
     GREEN=$(tput setaf 2)
@@ -87,7 +108,9 @@ fi
 #echo -e $name | column -t | fmt -w $COLUMNS -t 
 #echo -e $name | fmt -w $COLUMNS | column -t
 
-echo " ${name[@]/%/$'\n'}" | column
+#echo " ${name[@]/%/$'\n'}" | column
+
+column
 
   aria2c $list $ARIA2C
   printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
