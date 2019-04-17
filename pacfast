@@ -109,7 +109,7 @@ fi
 #echo -e $name | fmt -w $COLUMNS | column -t
 
 #echo " ${name[@]/%/$'\n'}" | column
-values("$namever")
+values($namever)
 column
 
   aria2c $list $ARIA2C
