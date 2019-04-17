@@ -92,7 +92,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   name=$(pacman $@ --print --print-format "%n")
   namever=$(pacman $@ --print --print-format "%n-%v")
-  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$list} END {print size}')
+  total=$(pacman $@ --print --print-format "%s" | awk '{size} END {print size}')
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$name" | wc -l)
 
