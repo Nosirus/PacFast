@@ -86,7 +86,7 @@ fi
   optf=' -->'
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd"
-  echo "test"
+  echo " "
 
 #echo "${name[@]/%/$'\n'}" | column 
 
