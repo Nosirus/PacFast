@@ -87,7 +87,6 @@ fi
   #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
   
 optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
-optd=$namever
 print "$optf" "$optd"
 
 #echo "${name[@]/%/$'\n'}" | column 
