@@ -85,7 +85,7 @@ fi
 #echo -e $namever | column -t | fmt -w $COLUMNS 
 #echo -e $name | fmt -w $COLUMNS | column -t
 
-echo -e $namever | column -t | fmt -w $COLUMNS -t
+echo -e $namever | column -t | fmt
 
 #echo "${name[@]/%/$'\n'}" | column 
 
