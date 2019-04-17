@@ -86,7 +86,8 @@ fi
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
   
-optd=$(echo $namever\t | xargs -n1 | sort | xargs)
+optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
+optd=$namever
 print "$optf" "$optd"
 
 #echo "${name[@]/%/$'\n'}" | column 
