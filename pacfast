@@ -19,11 +19,6 @@ function clean() {
   done
 }
 
-function clear() {
-  tput sc
-  tput rc;tput el
-}
-
 function center() {
   termwidth="$(tput cols)"
   padding="$(printf '%0.1s' -{1..500})"
@@ -96,8 +91,8 @@ fi
 #echo "${name[@]/%/$'\n'}" | column 
 
   aria2c $list $ARIA2C
-  clear
-  clear
+  tput cuu1 # up by one line
+        tput el # clear that line
   #printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
   
   # Install package
