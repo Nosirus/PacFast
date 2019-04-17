@@ -123,7 +123,7 @@ fi
 echo -e $name | column -t | fmt -w $COLUMNS -t 
 #echo -e $name | fmt -w $COLUMNS | column -t
 
-#echo " ${name[@]/%/$'\n'}" | column
+echo " ${name[@]/%/$'\n'}" | column
 
 #values=($name)
 #column
