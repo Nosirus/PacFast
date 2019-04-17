@@ -94,7 +94,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   namever=$(pacman $@ --print --print-format "%n-%v")
   total=$(pacman $@ --print --print-format "%s" | awk '{size+=$name} END {print size}')
   repository=$(pacman $@ --print --print-format "%r")
-  number=$(echo "$namever" | wc -l)
+  number=$(echo "$name" | wc -l)
 
   
   
@@ -120,12 +120,10 @@ fi
   echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for a total size $total $suffix \e[0m"
   #echo -e "\n" $name "  " | fmt -w $COLUMNS
   #echo -e "\n"
-#echo -e $name | column -t | fmt -w $COLUMNS -t 
+echo -e $name | column -t | fmt -w $COLUMNS -t 
 #echo -e $name | fmt -w $COLUMNS | column -t
 
 #echo " ${name[@]/%/$'\n'}" | column
-
-echo "dit une connerie"
 
 #values=($name)
 #column
