@@ -96,10 +96,6 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$name" | wc -l)
   
-  echo $name
-
-  
-  
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
         total=$( echo "scale=2; $total / 1024" | bc )
@@ -119,7 +115,7 @@ fi
   On_White='\e[1;30;107m'
   On_Green='\e[1;97;42m'
 
-  echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for a total size $total $suffix \e[0m"
+  #echo -e "\n\e ${On_Green} Downloading: ${On_White} $number Package(s) for a total size $total $suffix \e[0m"
 echo -e $namever | column -t | fmt -w $COLUMNS -t 
 #echo -e $name | fmt -w $COLUMNS | column -t
 
