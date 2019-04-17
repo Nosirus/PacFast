@@ -91,6 +91,7 @@ fi
 #echo "${name[@]/%/$'\n'}" | column 
 
   aria2c $list $ARIA2C
+  tput sc
   tput cuu 2 && tput el
   #printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
   
