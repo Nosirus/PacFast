@@ -85,7 +85,7 @@ fi
 
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
-  
+optf='-->'
 optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
 print "$optf" "$optd"
 printf "\x$(printf %x 192)"
