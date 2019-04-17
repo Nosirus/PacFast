@@ -8,6 +8,7 @@ ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
 trap ctrl_c INT
 
 function ctrl_c() {
+echo -n "aria2 will resume download if the transfer is restarted." && echo -e "\rShort sentance"
   clean
   exit 0
 }
@@ -91,9 +92,7 @@ fi
 #echo "${name[@]/%/$'\n'}" | column 
 
   aria2c $list $ARIA2C
-  tput sc
-  tput cuu 2 && tput el
-  #printf "%s\r%s%s" xyzzyxyzzyxyzzyxyzzy $(tput el) "Download finished"
+  printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
