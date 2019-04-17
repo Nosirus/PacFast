@@ -87,7 +87,7 @@ fi
 
 #echo -e $namever | column -t | fmt -w $COLUMNS
 my_list=$(echo $name | xargs -n1 | sort | xargs)
-echo -e $my_list | column -t
+echo -e $my_list | fmt -w $COLUMNS | column -t
 
 #echo "${name[@]/%/$'\n'}" | column 
 
