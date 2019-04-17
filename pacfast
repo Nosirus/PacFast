@@ -84,9 +84,21 @@ fi
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
 #echo -e $namever | column -t | fmt -w $COLUMNS 
 #echo -e $name | fmt -w $COLUMNS | column -t
-name=$name | tr ' ' '\n' | sort | tr '\n' ' '
+
 #echo -e $namever | column -t | fmt -w $COLUMNS
-echo -e $name | fmt -w $COLUMNS
+echo -e $name | fmt -w $COLUMNS |
+  awk 'BEGIN {
+      RS=ORS=" "                            # space as record seaparator
+      PROCINFO["sorted_in"]="@val_str_asc"  # array value used as order
+  }
+  {
+      a[NR]=$0                              # hash on NR to a
+  }
+  END {
+      for(i in a)                           # in given order
+          print a[i]                        # output values in a
+          print "\n"                        # happy ending
+  }'
 
 #echo "${name[@]/%/$'\n'}" | column 
 
