@@ -103,7 +103,7 @@ fi
   
 optf=$(echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m")
 optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
-printhelp "$optf" "$optd"
+print "$optf" "$optd"
 
 #echo "${name[@]/%/$'\n'}" | column 
 
