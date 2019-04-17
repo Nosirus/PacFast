@@ -29,7 +29,7 @@ function column() {
     local leftMargin=${left:-0}
     local padding=${spacing:-2}
     local maxWidth=$(( ${terminalWidth:-80} - $leftMargin ))
-    local values=("$@")
+    #local values=("$@")
     local max=$(( $(IFS=''; echo "${values[*]/%/$'\n'}" | wc -L) + $padding ))
     local cols=$(( $maxWidth / $max ))
 
@@ -109,7 +109,7 @@ fi
 #echo -e $name | fmt -w $COLUMNS | column -t
 
 #echo " ${name[@]/%/$'\n'}" | column
-
+values("$namever")
 column
 
   aria2c $list $ARIA2C
