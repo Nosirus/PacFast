@@ -91,7 +91,8 @@ fi
 #echo "${name[@]/%/$'\n'}" | column 
 
   aria2c $list $ARIA2C
-  printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
+  echo -n "[DL:"; tput el; echo
+  #printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
