@@ -40,6 +40,23 @@ log_msg() {
     printf "%${COL}s"  "$STATUSCOLOR"
 }
 
+function printhelp() (
+  c1width=10
+  cols=$(tput cols)
+  c2width=$((cols - c1width - 1))
+  readarray -t lines < <(printf '%s' "$2" | fmt -w $c2width)
+  for((line=0; line < ${#lines[*]}; line++))
+  do
+    if [ $line -eq 0 ]
+    then
+      col1="$1"
+    else
+      col1=" "
+    fi
+    printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
+  done
+)
+
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
   ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
 fi
@@ -80,14 +97,13 @@ fi
   NC='\033[0m' # No Color
   On_White='\e[1;30;107m'
   On_Green='\e[1;97;42m'
-
-  echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
-#echo -e $namever | column -t | fmt -w $COLUMNS 
-#echo -e $name | fmt -w $COLUMNS | column -t
-
-#echo -e $namever | column -t | fmt -w $COLUMNS
 my_list=$(echo $namever | xargs -n1 | sort | xargs)
-echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
+  #echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
+  #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
+  
+optf='-m'
+optd=$(echo $namever)
+printhelp "$optf" "$optd"
 
 #echo "${name[@]/%/$'\n'}" | column 
 
