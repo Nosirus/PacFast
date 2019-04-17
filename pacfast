@@ -91,7 +91,7 @@ fi
 #echo "${name[@]/%/$'\n'}" | column 
 
   aria2c $list $ARIA2C
-  echo -n "[DL:"; tput el; echo
+  echo -n "[DL:"; tput cuu1; tput el; echo
   #printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
   # Install package
