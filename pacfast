@@ -54,6 +54,7 @@ function print() (
       col1=" "
     fi
     printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
+    echo
   done
 )
 
