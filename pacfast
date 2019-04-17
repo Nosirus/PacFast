@@ -8,7 +8,6 @@ ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
 trap ctrl_c INT
 
 function ctrl_c() {
-echo -n "aria2 will resume download if the transfer is restarted."; tput el; echo
   clean
   exit 0
 }
@@ -86,10 +85,7 @@ fi
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   optf=' -->'
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
-  print "$optf" "$optd"
-  echo " "
-
-#echo "${name[@]/%/$'\n'}" | column 
+  print "$optf" "$optd" && echo " "
 
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
