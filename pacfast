@@ -102,7 +102,7 @@ my_list=$(echo $namever | xargs -n1 | sort | xargs)
   #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
   
 optf='-m'
-optd=$(echo $namever)
+optd=$(echo $namever | xargs -n1 | sort | xargs | fmt -w $COLUMNS)
 printhelp "$optf" "$optd"
 
 #echo "${name[@]/%/$'\n'}" | column 
