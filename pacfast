@@ -84,9 +84,8 @@ fi
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
 #echo -e $namever | column -t | fmt -w $COLUMNS 
 #echo -e $name | fmt -w $COLUMNS | column -t
-term_width=$(tput cols)
-(( columns = $term_width / ($longest_value + 2) ))
-echo -e $namever | column -t | fmt -w $COLUMNS | sort
+name=$name | sort
+echo -e $namever | column -t | fmt -w $COLUMNS
 
 #echo "${name[@]/%/$'\n'}" | column 
 
