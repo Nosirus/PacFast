@@ -98,10 +98,9 @@ fi
   On_White='\e[1;30;107m'
   On_Green='\e[1;97;42m'
 
-  #echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
+  echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   #echo -e $namever | xargs -n1 | sort | xargs | column -t | fmt -w $COLUMNS
   
-optf=$(echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \n\e[0m")
 optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
 print "$optf" "$optd"
 
