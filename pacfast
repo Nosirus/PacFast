@@ -25,21 +25,6 @@ function center() {
   printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$1" 0 "$(((termwidth-1-${#1})/2))" "$padding"
 }
 
-
-
-log_msg() {
-    RED=$(tput setaf 2)
-    GREEN=$(tput setaf 2)
-    NORMAL=$(tput sgr0)
-    MSG="$1"
-    STATUS="[OK]"
-    STATUSCOLOR="$GREEN${STATUS}$NORMAL"
-    let COL=$(tput cols)-${#MSG}+${#STATUSCOLOR}-${#STATUS}
-
-    echo -n $MSG
-    printf "%${COL}s"  "$STATUSCOLOR"
-}
-
 function print() (
   c1width=10
   cols=$(tput cols)
@@ -53,8 +38,7 @@ function print() (
     else
       col1=" "
     fi
-    printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
-    echo
+    printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]\n}"
   done
 )
 
