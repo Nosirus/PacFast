@@ -95,6 +95,6 @@ fi
   
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
-  pacman $(echo "$1" | sed "s/y//g") ${@:2} #&& rm -f "$LIST" && exit 0
+  pacman $(echo "$1" | sed "s/y//g") ${@:2}
   exit 1
 fi
