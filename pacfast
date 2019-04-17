@@ -86,7 +86,7 @@ fi
 #echo -e $name | fmt -w $COLUMNS | column -t
 
 #echo -e $namever | column -t | fmt -w $COLUMNS
-echo -e $name | fmt -w $COLUMNS |
+echo -e $name |
   awk 'BEGIN {
       RS=ORS=" "                            # space as record seaparator
       PROCINFO["sorted_in"]="@val_str_asc"  # array value used as order
@@ -98,7 +98,7 @@ echo -e $name | fmt -w $COLUMNS |
       for(i in a)                           # in given order
           print a[i]                        # output values in a
           print "\n"                        # happy ending
-  }'
+  }' | fmt -w $COLUMNS
 
 #echo "${name[@]/%/$'\n'}" | column 
 
