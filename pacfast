@@ -82,10 +82,10 @@ fi
   On_Green='\e[1;97;42m'
 
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
-echo -e $namever | column -t | fmt -w $COLUMNS -t 
+#echo -e $namever | column -t | fmt -w $COLUMNS -t 
 #echo -e $name | fmt -w $COLUMNS | column -t
 
-#echo " ${name[@]/%/$'\n'}" | column
+echo " ${name[@]/%/$'\n'}" | column
 
 #values=($name)
 #column
