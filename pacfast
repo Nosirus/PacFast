@@ -98,7 +98,7 @@ echo -e $name |
       for(i in a)                           # in given order
           print a[i]                        # output values in a
           print "\n"                        # happy ending
-  }' | fmt -w $COLUMNS | column -t
+  }' | column -t | fmt -w $COLUMNS
 
 #echo "${name[@]/%/$'\n'}" | column 
 
