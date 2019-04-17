@@ -91,7 +91,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   # Create new jobs
   name=$(pacman $@ --print --print-format "%n")
   namever=$(pacman $@ --print --print-format "%n-%v")
-  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$test} END {print size}')
+  total=$(pacman $@ --print --print-format "%s" | awk 'END {print size}')
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$namever" | wc -l)
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
