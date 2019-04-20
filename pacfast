@@ -94,9 +94,6 @@ fi
             else
                 printf "\e[1A\e[1G\e[K"
             fi
-        done
-
-  
 
 	    
   #aria2c $list $ARIA2C
