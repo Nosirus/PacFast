@@ -42,12 +42,6 @@ function print() (
   done
 )
 
-function oneShot() {
-    url=$list
-    finalURL="$url$1"
-    curl -s "$finalURL"   
-}
-
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
   ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
 fi
@@ -93,10 +87,19 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  export -f oneShot
-parallel -j25 oneShot < list
+curl $list \
+    --progress-bar \
+    --verbose \
+    -F build="${BUILD}" \
+    -F version="${VERSION}" \
+    -F ipa="@${IPA};type=application/octet-stream" \
+    -F assets="@-;type=text/xml" \
+    -F replace="${REPLACE}" \
+    -A "${CURL_FAKE_USER_AGENT}" \
+    <<< "${ASSETS}" \
+    | tee -a "${LOG_FILE}" ; test ${PIPESTATUS[0]} -eq 0
 
-	    
+
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
