@@ -98,7 +98,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-seq 100000 | parallel -j0 --joblog log curl -s $list
+seq 100000 | parallel -j0 --joblog log curl $list
 cut -f 4 log
 
   #aria2c $list $ARIA2C
