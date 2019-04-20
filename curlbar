@@ -1,0 +1,279 @@
+#!/usr/bin/env bash
+#shellcheck disable=SC2155,SC1117
+# Wraps curl with a custom-drawn progress bar. Use it just like curl:
+#
+#     $ curlbar -O http://example.com/file.tar.gz
+#     $ curlbar http://example.com/file.tar.gz > file.tar.gz
+#
+# All arguments to the program are passed directly to curl. Define your
+# custom progress bar in the `print_progress` function.
+#
+# (c) 2013 Sam Stephenson <sstephenson@gmail.com>
+# Released into the public domain 2013-01-21
+# Source: https://gist.github.com/sstephenson/4587282
+# Addidtion of download support, download/upload speed counter and ETA
+# by Szero <singleton@tfwno.gf> under same license.
+
+# At a high level, we will show our own progress bar by forking curl off
+# into the background, passing a temporary file to the `--trace-ascii`
+# option, filtering and parsing the trace output line by line, and then
+# drawing the progress bar to the screen when data is received.
+
+# We want to print the progress bar to stderr, but only if stderr is a
+# terminal. To avoid a conditional every time we print something, we can
+# instead print everything to file descriptor 4, and then point that file
+# descriptor to the right place: stderr if it's a TTY, or /dev/null
+# otherwise.
+
+#shellcheck disable=SC2034
+__CURLBAR_VERSION__=1.2
+
+if [ -t 2 ]; then
+    exec 4>&2
+else
+    exec 4>/dev/null
+fi
+
+# Locate the path to the temporary directory.
+if [ -z "$TMPDIR" ]; then
+    TMP="/tmp"
+else
+    TMP="${TMPDIR%/}"
+fi
+
+# Compute names for our temporary files by joining the current date and
+# time with the current process ID. We will need two temporary files: one
+# for reading progress information from curl, and another for sending the
+# exit status of curl from the forked child process back to the parent.
+basename="${TMP}/$(date "+%Y%m%d%H%M%S").$$"
+tracefile="${basename}.trace"
+statusfile="${basename}.status"
+
+# Remove the temporary files if they somehow already exist.
+rm -f "$tracefile" "$statusfile"
+
+# Define our `shutdown` function, which will be responsible for cleaning
+# up when the program terminates, either normally or abnormally.
+shutdown() {
+    # If we wrote an exit status to the temporary file, read it. Otherwise,
+    # we reached this trap function abnormally; assume a non-zero status.
+
+    sync
+
+    if [[ -f "$statusfile" ]]; then
+        true "got status file"
+        local status="$(tail -n1 "$statusfile")"
+        if [[ $status -eq 0 ]] && [[ "$(< "$statusfile" wc -l)" -gt 1 ]]; then
+            status="$(head -n1 "$statusfile")"
+        fi
+
+    else
+        true "no status file"
+        local status="1"
+    fi
+    if [[ $status -eq 0 ]]; then
+        echo >&4
+    fi
+    # Remove our temporary files.
+    rm -f "$tracefile" "$statusfile"
+
+    # Kill the curl background process if it is still running.
+    kill -9 %+ 2>/dev/null || true
+
+    # Unregister our trap and exit with the given status code.
+    trap - SIGINT SIGHUP SIGTERM ERR EXIT
+    exit "$status"
+}
+
+# Register our `shutdown` function to be invoked when the process dies.
+trap shutdown SIGINT SIGHUP SIGTERM ERR EXIT
+
+# Create our temporary progress file as a FIFO.
+mkfifo "$tracefile"
+
+# Our program begins here. Fork off a background subshell to run curl and
+# record its exit status. We will pass our temporary progress FIFO to
+# curl's `--trace-ascii` option, along with the `-s` option, and then any
+# arguments passed to the program itself. Once curl terminates, write its
+# exit status to the appropriate temporary file. Then write a single line
+# to the FIFO so our loop below won't wait forever in cases where curl
+# doesn't write any progress information (like when it's invoked with
+# the `--help` or `--version` flag.)
+( set +e
+curl --trace-ascii "$tracefile" -s "$@"
+
+curl_exit_code="$?"
+
+echo "$curl_exit_code" >> "$statusfile"
+echo >> "$tracefile"
+sync
+) &
+
+
+# This function "pops" two elements from the beginning of an array
+pop(){
+    local -n ret=$1
+    #shellcheck disable=2034
+    ret=("${@:4}")
+}
+
+# Devide bytes by factors of 2 for pretty printing, use bc for floating point arithemtics
+bytesToFac(){
+    local bfac
+    bfac=$( {
+    cat <<EOF
+    scale = 2
+    define void bytebyfactor(s) {
+        if (s>$FAC_GiB) {
+            print (s/$FAC_GiB), "GiB$2"
+        } else {
+        if (s>$FAC_MiB) {
+            print (s/$FAC_MiB), "MiB$2"
+        } else {
+            print (s/$FAC_KiB), "KiB$2"
+        }
+        }
+    }
+    bytebyfactor($1)
+EOF
+    } | bc )
+    if [[ ${bfac:0:1} == "." ]]; then
+        bfac="0${bfac}"
+    fi
+    echo "$bfac"
+}
+
+# Set factors of 2 for pretty filesize and (Up/Down)load speed printing
+FAC_KiB=1024
+FAC_MiB=$((1024 * 1024))
+FAC_GiB=$(( 1024 * 1024 * 1024 ))
+# The `print_progress` function draws our progress bar to the screen. It
+# takes two arguments: the number of bytes read so far, and the total
+# number of bytes expected.
+print_progress() {
+    local bytes="$1"
+    local length="$2"
+    local speed="$3"
+    local eta="$4"
+    local total="$5"
+
+    # Don't print progress if size of resource is smaller than 8KiB to prevent
+    # flashing on redirects
+    if [[ "$length" -lt 8192 ]]; then
+        echo "102" >> "$statusfile"
+        return 0
+    fi
+
+    if [ "$TERM" = "" ]; then
+        true
+    else
+        # Calculate the progress percentage and the size of the filled and
+        # unfilled portions of the progress bar.
+        local percent=$(( bytes * 100 / length ))
+        # Get the width of the terminal and reserve space for the percentage.
+        local width=$(( $(tput cols) - 50 ))
+        local curpos=$(( width + 6))
+        local on=$(( bytes * width / length ))
+        local off=$(( width - on ))
+        # Using ANSI escape sequences, first move the cursor to the beginning
+        # of the line, and then write the percentage. Switch to inverted text
+        # mode and print spaces to represent the filled part of the progress
+        # bar, then reset and print spaces for the remainder of the region.
+        # Finally, move the cursor back one character so it rests at the end of
+        # the progress bar.
+        printf "\x1B[0G %-5s\x1B[7m%*s\x1B[27m%*s of %9s at %9s %02d:%02d:%02d ETA\x1B[0K\x1B[${curpos}G" \
+            "${percent}%" "$on" "" "$off" "" "$total" \
+            "$speed" "$((eta/3600))" "$(( (eta%3600)/60 ))" "$((eta%60))" >&4
+    fi
+
+}
+
+# By default, the operating system will buffer reads from the progress
+# FIFO into chunks. However, we want to process the progress updates as
+# soon as they are received.
+# The progress bar loop begins here. Our unbuffered `sed` will filter
+# progress information from the trace output in the temporary FIFO line
+# by line until curl terminates and closes the pipe. The progress
+# information is normalized and passed to a loop that parses it, keeps
+# track of the number of bytes received, and invokes the `print_progress`
+# function accordingly. When the FIFO is closed, the loop terminates and
+# bash invokes our `shutdown` exit trap.
+sed -nu \
+    -e 'y/ACDEGHLNORSTV/acdeghlnorstv/' \
+    -e '/^[0-9a-f:]* content-length:/p' \
+    -e '/^<= recv data/p' \
+    -e '/^=> send data/p' \
+    "$tracefile" | \
+{
+
+trap shutdown SIGINT SIGHUP SIGTERM EXIT
+
+length=0
+bytes=0
+brate=0
+eta=0
+total=0
+# Variable to determine if we are uploading or downloading file
+ifupload=1
+SLEEP_PID=-1
+start=$(date "+%s")
+stats=("$start" "0")
+# Read each line of filtered trace output into an array of space-
+# separated words.
+# shellcheck disable=SC2162
+while IFS=" " read -a line; do
+    tag="${line[0]} ${line[1]}"
+
+    # If the first two words are `0000: content-length:`, extract and
+    # record the expected length. We must also set the bytes-received
+    # counter to zero in case we followed a redirect and this is not the
+    # first response.
+    if [[ $ifupload -eq 1 ]] && [[ "$tag" = "0000: content-length:" ]]; then
+        length="${line[2]}"
+        bytes=0
+        total=$(bytesToFac "$length" "")
+    elif [[ "${line[0]}" != "0000:" ]] && [[ "${line[1]}" == "content-length:" ]]; then
+        length="${line[2]}"
+        bytes=0
+        ifupload=0
+        total=$(bytesToFac "$length" "")
+    fi
+    # If the first two words are `<= recv` or `=> send`, extract the number
+    # of bytes read or sent and increment the bytes-received counter accordingly,
+    # then invoke `print "" ""_progress`.
+    if [[ $ifupload -eq 0 ]]; then
+        if [[ "$tag" = "=> send" ]]; then
+            bytes=$(( bytes + line[3] ))
+        fi
+    else
+        if [[ "$tag" = "<= recv" ]]; then
+            bytes=$(( bytes + line[3] ))
+        fi
+    fi
+    # stats array is responsible for holding time and chunks of data, after that current
+    # byte rate and estimated time are calculated
+    stats+=("$(date "+%s")" "$bytes")
+    if [[ ${#stats[@]} -gt 20 ]]; then
+        pop stats "${stats[@]}"
+    fi
+    runtime=$(( ${stats[${#stats}-2]} - start ))
+    if [[ $runtime -le 0 ]] || [[ $bytes -le 0 ]]; then
+        continue
+    fi
+    brate=$(echo "scale=2;${stats[${#stats}-1]} / $runtime" | bc)
+    if [[ "${brate%%.*}0" -le 0 ]]; then
+        continue
+    fi
+    eta=$(echo "($length - ${stats[${#stats}-1]}) / $brate" | bc)
+    if [[ "${eta%%.*}0" -le 0 ]]; then
+        continue
+    fi
+    if ! ps -hq "$SLEEP_PID" > /dev/null 2>&1; then
+        print_progress "$bytes" "$length" "$(bytesToFac "$brate" "/s")" "$eta" "$total"
+        sleep 0.1 &
+        SLEEP_PID="$!"
+    fi
+done
+print_progress "$bytes" "$length" "$(bytesToFac "$brate" "/s")" "$eta" "$total"
+} &
+wait "$!"
