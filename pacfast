@@ -87,7 +87,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-$handle = popen('curl $list 2>&1', 'rb');
+handle = popen('curl $list 2>&1', 'rb')
 
 while(!feof($handle))
 {
