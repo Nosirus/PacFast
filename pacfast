@@ -98,8 +98,8 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-seq 100000 | parallel -j0 mycurl
-
+seq 100000 | parallel -j0 --joblog log curl -s $list{} ">" {}.txt
+cut -f 4 log
 
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
