@@ -87,17 +87,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-curl $list \
-    --progress-bar \
-    --verbose \
-    -F build="${BUILD}" \
-    -F version="${VERSION}" \
-    -F ipa="@${IPA};type=application/octet-stream" \
-    -F assets="@-;type=text/xml" \
-    -F replace="${REPLACE}" \
-    -A "${CURL_FAKE_USER_AGENT}" \
-    <<< "${ASSETS}" \
-    | tee -a "${LOG_FILE}" ; test ${PIPESTATUS[0]} -eq 0
+curl --progress-bar -T "${SOME_LARGE_FILE}" $list | tee /dev/null
 
 
   #aria2c $list $ARIA2C
