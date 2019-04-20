@@ -243,9 +243,9 @@ args()
 
 trap 'echo; exit' SIGINT # catch ^C
 
-if [[ $(whoami) == 'root' ]]; then
-    die "do not run baph as root"
-elif (( $# == 0 )); then
+#if [[ $(whoami) == 'root' ]]; then
+#    die "do not run baph as root"
+if (( $# == 0 )); then
     die "no operation specified (use -h for help)"
 elif ! hash pacman curl sudo >/dev/null 2>&1; then
     die "this requires 'sudo', 'pacman', and 'curl' ... 'git' is optional"
