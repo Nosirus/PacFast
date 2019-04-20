@@ -90,9 +90,10 @@ fi
   curl  | awk '/Details:/ {sub(/<\/h.?>/,""); print $4}'
   
 curl --progress-bar -m 10 $list 2>er
-$ while :; do 
+$ while :; 
     echo -ne "$(tr $'\r' $'\n' < er | tail -n 1 | sed -r 's/^[# ]+/#/;')\r"; 
   done
+  
 
 	    
   #aria2c $list $ARIA2C
