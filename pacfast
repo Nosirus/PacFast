@@ -87,9 +87,8 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  curl  | awk '/Details:/ {sub(/<\/h.?>/,""); print $4}'
-  
-  curl $list 2>&1 | stdbuf -oL tr -s '\r' '\n' | while read i; do echo -en "\r$i  "; done
+curl --progress-bar -m 10 $list 2>&1 | 
+   tr $'\r' $'\n' | sed -r 's/[# ]+/#/g;'
 
   
 
