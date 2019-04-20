@@ -44,7 +44,7 @@ function print() (
 
 mycurl() {
     START=$(date +%s)
-    curl -s $list$1  > $1.txt
+    curl -s $list
     END=$(date +%s)
     DIFF=$(( $END - $START ))
     echo "It took $DIFF seconds"
