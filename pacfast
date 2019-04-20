@@ -98,8 +98,13 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-seq 100000 | parallel -j0 --joblog log curl $list
-cut -f 4 log
+for n in {1..100000..1000}; do   # start 100 fetch loops
+        for i in `eval echo {$n..$((n+999))}`; do
+                echo "club $i..."
+                curl -s "$list"$i  > $i.txt
+        done &
+        wait
+done
 
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
