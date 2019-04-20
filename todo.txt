@@ -1,0 +1,3 @@
+http://test-debit.free.fr/1048576.rnd
+http://test-debit.free.fr/65536.rnd
+http://test-debit.free.fr/image.iso
