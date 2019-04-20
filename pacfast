@@ -87,7 +87,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  curl -m 10 "$list" | awk '/Details:/ {sub(/<\/h.?>/,""); print $4}'
+  curl -m 10 $list | awk '/Details:/ {sub(/<\/h.?>/,""); print $4}'
 
 	    
   #aria2c $list $ARIA2C
