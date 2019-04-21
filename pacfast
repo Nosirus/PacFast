@@ -36,6 +36,12 @@ function print() (
   done
 )
 
+aria_get_rpc_gid(){
+    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellActive 2> $METAFILE.err > $METAFILE.rpc
+    ARIA2_GID=$(cat $METAFILE.rpc | grep "gid" -A1 -m1| grep Value | awk -F"'" '{print $2}')
+    export ARIA2_GID
+}
+
 aria_monitor_log(){
     FILE=$1
 
