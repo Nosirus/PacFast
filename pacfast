@@ -80,7 +80,10 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  aria2c $list $ARIA2C
+  #aria2c $list $ARIA2C
+              imagesize=$(curl $list -I -s | awk '/Content-Length: [0-9]+/ { print $2}')
+    echo $imagesize
+  exit 1
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
   # Install package
