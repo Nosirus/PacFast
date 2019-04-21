@@ -1,0 +1,174 @@
+
+aria_getsize() {
+    type=$1
+    source=$2
+
+    case "$type" in
+        "metalink"|"bittorrent")
+            imagesize=$(aria2c -S $source | awk '/\|.*\([0-9,]+\)/ { gsub("[),(]","",$2); print $2}')
+        ;;
+        "http"|"ftp")
+            imagesize=$(curl $source -I -s | awk '/Content-Length: [0-9]+/ { print $2}')
+        ;;
+    esac
+
+    echo $imagesize
+}
+
+
+aria_autodetect_staging_dir() {
+
+    if [ -z "${1}" ]
+    then
+        logmsg "imagesize not given!"
+        exit 1
+    fi
+    IMAGESIZE=$1
+
+    # First check if we have enough RAM to save the image
+    # we take 2GB as spare for the OS and SALI
+    AMOUNT=$(cat /proc/meminfo | awk '/MemTotal/ {print $2}')
+    AMOUNT=$(($AMOUNT-2097152))
+
+    if [ $AMOUNT -gt $IMAGESIZE ]
+    then
+        echo "/tmp"
+        return
+    fi
+
+    # Probally we don't have enough RAM, so checking a couple
+    # directories in /a
+    PREFERED_DIRS="/a/tmp /a/var/tmp /scratch /a"
+    IMAGESIZE=$(($IMAGESIZE+102400))
+    for dir in $PREFERED_DIRS
+    do
+        if [ -d $dir ]
+        then
+            DIR_SPACE=$(df $dir 2>/dev/null | sed '1d' | sed 's/[[:space:]]\+/ /g' | cut -d' ' -f4 | sed -ne '$p')
+            if [ -z "${DIR_SPACE}" ]
+            then
+                if [ $DIR_SPACE -gt $1 ]
+                then
+                    echo $dir
+                fi 
+            fi
+        fi
+    done
+
+}
+
+aria_get_rpc_progress() {
+    METAFILE=$1
+
+    if [ -n "${2}" ]
+    then
+        SCALE=$2
+    else
+        SCALE=0
+    fi
+
+    #first save some data
+    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellStatus $ARIA2_GID 2> $METAFILE.err > $METAFILE.rpc
+
+    TOTALSIZE=$(cat $METAFILE.rpc | grep "totalLength" -A1 -m1| grep Value | awk -F"'" '{print $2}')
+    COMPLETEDSIZE=$(cat $METAFILE.rpc | grep "completedLength" -A1 -m1| grep Value | awk -F "'" '{print $2}')
+
+    if [ -z "${TOTALSIZE}" -o -z "${COMPLETEDSIZE}" ]
+    then
+        echo 0
+    else
+        echo "$(echo "scale=$SCALE; $COMPLETEDSIZE * 100 / $TOTALSIZE"| bc)"
+    fi
+}
+
+aria_get_rpc_speed() {
+    METAFILE=$1
+
+    #first save some data
+    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellStatus $ARIA2_GID 2> $METAFILE.err > $METAFILE.rpc
+
+    SPEED=$(cat $METAFILE.rpc | grep "downloadSpeed" -A1 -m1| grep Value | awk -F"'" '{print $2}')
+
+    if [ -z "${SPEED}" ]
+    then
+        echo 0
+    else
+        echo $SPEED
+    fi
+}
+
+aria_get_rpc_gid(){
+    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellActive 2> $METAFILE.err > $METAFILE.rpc
+    ARIA2_GID=$(cat $METAFILE.rpc | grep "gid" -A1 -m1| grep Value | awk -F"'" '{print $2}')
+    export ARIA2_GID
+}
+
+aria_monitor_log(){
+    FILE=$1
+
+    DONE=0
+    while [ $DONE -lt 1 ]
+    do              
+        if [ -z "${ARIA2_GID}" ]
+        then
+            aria_get_rpc_gid $FILE
+            p_comment 0 "Download indentifier is: ${ARIA2_GID}"
+        fi
+
+        if [ -n "${ARIA2_GID}" ]
+        then
+            PROGRESS=$(aria_get_rpc_progress $FILE)
+            SPEED=$(aria_get_rpc_speed $FILE)
+            case $PROGRESS in
+                    *100*)
+                            p_comment 0  "Done with downloading file"
+                            DONE=1
+                    ;;                                                              
+
+                    *)
+                            p_comment 0 "Downloading: ${PROGRESS} percent at ${SPEED} bytes/sec"
+                            sleep 5
+                    ;;
+            esac
+        else
+            p_comment 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
+            sleep 10
+        fi
+    done 
+}
+
+aria_get_file() {
+    metafile=$1
+    destination=$2
+
+    # Bittorrent log file
+    metafile_log=/tmp/aria.log
+    save_param ARIA_LOG /tmp/aria.log
+
+    ##Starting aria2c and sending the stdout to a file
+    logmsg "/usr/bin/aria2c --enable-rpc --human-readable=false --dir $destination $metafile &> $metafile_log &"
+    /usr/bin/aria2c --enable-rpc --human-readable=false --dir $destination $metafile &> $metafile_log &
+
+    pid=$!
+    if [ ! -d /proc/$pid ]; then
+         logmsg "aria2c is not running"
+         shellout
+    fi
+
+    cntr=0
+
+    while : ; do
+        if [ -e $metafile_log ]; then
+    	    aria_monitor_log $metafile_log
+            break
+        else
+            cntr=$(($cntr+1))
+            sleep 5
+        fi
+
+        if [ $cntr -gt 5 ]; then
+            logmsg "Logfile could not be located, something is wrong!"
+            shellout
+        fi
+    done
+}
