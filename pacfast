@@ -98,14 +98,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-symbols="GOOG+YHOO"
-curl -s $list | awk '{
-    gsub(/\r/, "",$0)
-    print $0
-    split($0,a,",")
-    print a[1], a[3], a[4], "("a[5]")abc"
-}'
-
+parallel -a <(seq 0800 9999) -a <(seq 001 032) -P 8 curl $list
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
