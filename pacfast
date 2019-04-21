@@ -70,7 +70,7 @@ aria_monitor_log(){
                     ;;
             esac
         else
-            p_comment 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
+            #p_comment 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
             sleep 10
         fi
     done 
