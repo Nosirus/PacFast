@@ -2,7 +2,7 @@
 
 PacmanCache=$(pacman-conf Cachedir)
 SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
-ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 --enable-rpc --human-readable=false \
+ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
 trap ctrl_c INT
@@ -120,7 +120,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  aria2c $list $ARIA2C
+  aria2c $list -d "$PacmanCache" --enable-rpc --human-readable=false $metafile &> $metafile_log & #$ARIA2C
  pid=$!
     if [ ! -d /proc/$pid ]; then
          logmsg "aria2c is not running"
