@@ -1,5 +1,6 @@
 #!/bin/bash
 # if mirrors exists, cat it, otherwise create it
+MIRRORS=" "
 function get_mirrors () #{{{1
 {
    if [[ -s $MIRRORS ]]; then
