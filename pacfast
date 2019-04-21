@@ -107,7 +107,7 @@ else
         --version|-v) use -v ;;
         --search|-s) search $@; ;;
         --update|-u*) args $@; update; ;;
-        --install|-i*) args $@; installp; ;;
+        --sync|-S*) args $@; installp; ;;
         *) error "invalid option -- '$arg'"
     esac
 fi
