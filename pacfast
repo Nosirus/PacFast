@@ -98,13 +98,13 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-for n in {1..100000..1000}; do   # start 100 fetch loops
-        for i in `eval echo {$n..$((n+999))}`; do
-                echo "club $i..."
-                curl -s "$list"$i  > $i.txt
-        done &
-        wait
-done
+symbols="GOOG+YHOO"
+curl -s $list | awk '{
+    gsub(/\r/, "",$0)
+    print $0
+    split($0,a,",")
+    print a[1], a[3], a[4], "("a[5]")abc"
+}'
 
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
