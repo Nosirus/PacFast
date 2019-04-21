@@ -122,7 +122,7 @@ fi
   
   metafile=$1
   metafile_log=/tmp/aria.log
-    save_param ARIA_LOG /tmp/aria.log
+
   aria2c $list -d "$PacmanCache" --enable-rpc --human-readable=false $metafile &> $metafile_log & #$ARIA2C
  pid=$!
     if [ ! -d /proc/$pid ]; then
