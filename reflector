@@ -1,6 +1,6 @@
 #!/bin/bash
 # if mirrors exists, cat it, otherwise create it
-destdir="/ect/pacman.d/mirrorlist"
+destdir="/etc/pacman.d/mirrorlist"
 
 function get_mirrors () #{{{1
 {
