@@ -7,48 +7,6 @@ ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
 
 trap ctrl_c INT
 
-use()
-{ # show the standard UNIX style help message..
-    if [[ $1 == '-v' ]]; then
-        cat << EOF
-
- baph v0.4
-
-EOF
-    else
-        cat <<EOF
-
- PacFast - Simple faster pacman, install, and update packages
-
- usage: pacfast <operation> [options] [package(s)]
-
- operations:
-     baph {-h --help}
-     baph {-v --version}
-     baph {-s --search}  <query>
-     baph {-u --update}  [options] [package(s)]
-     baph {-i --install} [options] <package(s)>
-
- options:
-     --noview, -n       Skip viewing PKGBUILD files
-     --auronly, -a      Only operate on AUR packages
-     --noconfirm, -N    Skip confirmation dialogs
-
- examples:
-     install 'google-chrome' and 'yay' from the AUR
-         baph -i firefox krita
-
-     search for AUR packages matching 'cmus'
-         baph -s cmus
-
-     update only the AUR packages on the system, skip view/confirm dialogs
-         baph -uanN
-
-EOF
-    fi
-    exit 0
-}
-
 function ctrl_c() {
   clean
   exit 0
@@ -68,7 +26,7 @@ function center() {
 }
 
 function print() (
-  c1width=9
+  c1width=10
   cols=$(tput cols)
   c2width=$((cols - c1width - 1))
   readarray -t lines < <(printf '%s' "$2" | fmt -w $c2width)
@@ -84,12 +42,6 @@ function print() (
   done
 )
 
-error()
-{ # print string $1 and exit with error code $2, usage: die "error" 1
-    printf "\e[1;31merror:\e[0m $1\n" && exit ${2:-1}
-}
-
-
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
   ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
 fi
@@ -97,9 +49,6 @@ fi
 if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
-
-
-
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
@@ -110,7 +59,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   # Create new jobs
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   name=$(pacman $@ --print --print-format "%n")
-  namever=$(pacman $@ --print --print-format "%n-%v")
+  namever=$(pacman ${@:2} --print --print-format "%n-%v")
   total=$(pacman $@ --print --print-format "%s" | awk '{size+=$name} END {print size}')
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$name" | wc -l)
