@@ -36,6 +36,30 @@ function print() (
   done
 )
 
+aria_get_rpc_progress() {
+    METAFILE=$1
+
+    if [ -n "${2}" ]
+    then
+        SCALE=$2
+    else
+        SCALE=0
+    fi
+
+    #first save some data
+    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellStatus $ARIA2_GID 2> $METAFILE.err > $METAFILE.rpc
+
+    TOTALSIZE=$(cat $METAFILE.rpc | grep "totalLength" -A1 -m1| grep Value | awk -F"'" '{print $2}')
+    COMPLETEDSIZE=$(cat $METAFILE.rpc | grep "completedLength" -A1 -m1| grep Value | awk -F "'" '{print $2}')
+
+    if [ -z "${TOTALSIZE}" -o -z "${COMPLETEDSIZE}" ]
+    then
+        echo 0
+    else
+        echo "$(echo "scale=$SCALE; $COMPLETEDSIZE * 100 / $TOTALSIZE"| bc)"
+    fi
+}
+
 aria_get_rpc_gid(){
     /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellActive 2> $METAFILE.err > $METAFILE.rpc
     ARIA2_GID=$(cat $METAFILE.rpc | grep "gid" -A1 -m1| grep Value | awk -F"'" '{print $2}')
@@ -124,6 +148,8 @@ fi
   metafile_log=/tmp/aria.log
 
   aria2c $list -d "$PacmanCache" --enable-rpc --human-readable=false $metafile &> $metafile_log & #$ARIA2C
+  
+  aria_get_rpc_progress
  pid=$!
     if [ ! -d /proc/$pid ]; then
          logmsg "aria2c is not running"
