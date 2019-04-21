@@ -1,11 +1,54 @@
 #!/bin/bash
 
-CACHE=$(pacman-conf Cachedir)
+Cache=1
+PacmanCache=$(pacman-conf Cachedir)
 SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
 ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
 trap ctrl_c INT
+
+use()
+{ # show the standard UNIX style help message..
+    if [[ $1 == '-v' ]]; then
+        cat << EOF
+
+ baph v0.4
+
+EOF
+    else
+        cat <<EOF
+
+ PacFast - Simple faster pacman, install, and update packages
+
+ usage: pacfast <operation> [options] [package(s)]
+
+ operations:
+     baph {-h --help}
+     baph {-v --version}
+     baph {-s --search}  <query>
+     baph {-u --update}  [options] [package(s)]
+     baph {-i --install} [options] <package(s)>
+
+ options:
+     --noview, -n       Skip viewing PKGBUILD files
+     --auronly, -a      Only operate on AUR packages
+     --noconfirm, -N    Skip confirmation dialogs
+
+ examples:
+     install 'google-chrome' and 'yay' from the AUR
+         baph -i firefox krita
+
+     search for AUR packages matching 'cmus'
+         baph -s cmus
+
+     update only the AUR packages on the system, skip view/confirm dialogs
+         baph -uanN
+
+EOF
+    fi
+    exit 0
+}
 
 function ctrl_c() {
   clean
@@ -13,9 +56,9 @@ function ctrl_c() {
 }
 
 function clean() {
-  find "$CACHE" -type f -name "*.aria2" | while read f ; do
+  find "$PacmanCache" -type f -name "*.aria2" | while read f ; do
   name=$(basename "$f" .aria2)
-  rm -f "$CACHE$name" "$f" #2>/dev/null #"$LIST"
+  rm -f "$PacmanCache$name" "$f" #2>/dev/null #>/dev/null 2>&1
   done
 }
 
@@ -42,11 +85,10 @@ function print() (
   done
 )
 
-die()
+error()
 { # print string $1 and exit with error code $2, usage: die "error" 1
     printf "\e[1;31merror:\e[0m $1\n" && exit ${2:-1}
 }
-
 
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
@@ -56,6 +98,21 @@ fi
 if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
+
+if (( $# == 0 )); then
+    error "no operation specified (use -h for help)"
+else
+    arg="$1"; shift
+    case "$arg" in
+        --help|-h) use ;;
+        --version|-v) use -v ;;
+        --search|-s) search $@; ;;
+        --update|-u*) args $@; update; ;;
+        --install|-i*) args $@; installp; ;;
+        *) error "invalid option -- '$arg'"
+    esac
+fi
+
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
@@ -102,19 +159,4 @@ fi
   exit 1
 fi
 
-if (( $# == 0 )); then
-    die "no operation specified (use -h for help)"
-elif ! hash pacman curl sudo >/dev/null 2>&1; then
-    die "this requires 'sudo', 'pacman', and 'curl' ... 'git' is optional"
-else
-    arg="$1"; shift
-    case "$arg" in
-        --help|-h) use ;;
-        --version|-v) use -v ;;
-        --search|-s) search $@; ;;
-        --update|-u*) args $@; update; ;;
-        --install|-i*) args $@; installp; ;;
-        *) die "invalid option -- '$arg'"
-    esac
-    (( CACHE == 1 )) || rm -rf "$BLD"/* >/dev/null 2>&1
-fi
+
