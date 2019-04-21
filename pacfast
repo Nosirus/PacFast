@@ -98,19 +98,7 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
 
-if (( $# == 0 )); then
-    error "no operation specified (use -h for help)"
-else
-    arg="$1"; shift
-    case "$arg" in
-        --help|-h) use ;;
-        --version|-v) use -v ;;
-        --search|-s) search $@; ;;
-        --update|-u*) args $@; update; ;;
-        --sync|-S*) args $@; installp; ;;
-        *) error "invalid option -- '$arg'"
-    esac
-fi
+
 
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
