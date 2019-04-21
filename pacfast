@@ -2,7 +2,7 @@
 
 PacmanCache=$(pacman-conf Cachedir)
 SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
-ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 --enable-rpc \
+ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 --enable-rpc --human-readable=false \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
 trap ctrl_c INT
@@ -121,7 +121,28 @@ fi
   print "$optf" "$optd" && echo " "
   
   aria2c $list $ARIA2C
- aria_monitor_log
+ pid=$!
+    if [ ! -d /proc/$pid ]; then
+         logmsg "aria2c is not running"
+         shellout
+    fi
+
+    cntr=0
+
+    while : ; do
+        if [ -e $metafile_log ]; then
+    	    aria_monitor_log $metafile_log
+            break
+        else
+            cntr=$(($cntr+1))
+            sleep 5
+        fi
+
+        if [ $cntr -gt 5 ]; then
+            logmsg "Logfile could not be located, something is wrong!"
+            shellout
+        fi
+    done
   
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
