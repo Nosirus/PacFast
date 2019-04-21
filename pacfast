@@ -42,14 +42,10 @@ function print() (
   done
 )
 
-mycurl() {
-    START=$(date +%s)
-    curl -s $list
-    END=$(date +%s)
-    DIFF=$(( $END - $START ))
-    echo "It took $DIFF seconds"
+die()
+{ # print string $1 and exit with error code $2, usage: die "error" 1
+    printf "\e[1;31merror:\e[0m $1\n" && exit ${2:-1}
 }
-export -f mycurl
 
 
 
@@ -104,4 +100,21 @@ fi
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
   pacman $(echo "$1" | sed "s/y//g") ${@:2}
   exit 1
+fi
+
+if (( $# == 0 )); then
+    die "no operation specified (use -h for help)"
+elif ! hash pacman curl sudo >/dev/null 2>&1; then
+    die "this requires 'sudo', 'pacman', and 'curl' ... 'git' is optional"
+else
+    arg="$1"; shift
+    case "$arg" in
+        --help|-h) use ;;
+        --version|-v) use -v ;;
+        --search|-s) search $@; ;;
+        --update|-u*) args $@; update; ;;
+        --install|-i*) args $@; installp; ;;
+        *) die "invalid option -- '$arg'"
+    esac
+    (( CACHE == 1 )) || rm -rf "$BLD"/* >/dev/null 2>&1
 fi
