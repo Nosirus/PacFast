@@ -2,7 +2,7 @@
 
 PacmanCache=$(pacman-conf Cachedir)
 SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
-ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
+ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 --enable-rpc \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
 trap ctrl_c INT
@@ -35,6 +35,40 @@ function print() (
     printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
   done
 )
+
+aria_monitor_log(){
+    FILE=$1
+
+    DONE=0
+    while [ $DONE -lt 1 ]
+    do              
+        if [ -z "${ARIA2_GID}" ]
+        then
+            aria_get_rpc_gid $FILE
+            p_comment 0 "Download indentifier is: ${ARIA2_GID}"
+        fi
+
+        if [ -n "${ARIA2_GID}" ]
+        then
+            PROGRESS=$(aria_get_rpc_progress $FILE)
+            SPEED=$(aria_get_rpc_speed $FILE)
+            case $PROGRESS in
+                    *100*)
+                            p_comment 0  "Done with downloading file"
+                            DONE=1
+                    ;;                                                              
+
+                    *)
+                            p_comment 0 "Downloading: ${PROGRESS} percent at ${SPEED} bytes/sec"
+                            sleep 5
+                    ;;
+            esac
+        else
+            p_comment 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
+            sleep 10
+        fi
+    done 
+}
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
   ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
@@ -81,9 +115,7 @@ fi
   print "$optf" "$optd" && echo " "
   
   #aria2c $list $ARIA2C
-              imagesize=$(curl $list -I -s | awk '/Content-Length: [0-9]+/ { print $2}')
-    echo $imagesize
-  exit 1
+ aria_monitor_log
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
   # Install package
