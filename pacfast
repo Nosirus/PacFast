@@ -57,11 +57,11 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   clean
 
   # Create new jobs
-  list=$(pacman ${@:2} --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  name=$(pacman ${@:2} --print-format "%n")
-  namever=$(pacman ${@:2} --print-format "%n-%v")
-  total=$(pacman ${@:2} --print-format "%s" | awk '{size+=$name} END {print size}')
-  repository=$(pacman $@ --print-format "%r")
+  list=$(pacman $2 --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+  name=$(pacman $2 --print --print-format "%n")
+  namever=$(pacman $2 --print --print-format "%n-%v")
+  total=$(pacman $2 --print --print-format "%s" | awk '{size+=$name} END {print size}')
+  repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$name" | wc -l)
   
 suffix='B'
