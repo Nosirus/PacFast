@@ -95,7 +95,7 @@ fi
 
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
-  print "$optd" && echo " "
+  print "$optf" "$optd" && echo " "
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
