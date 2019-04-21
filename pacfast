@@ -19,12 +19,6 @@ function clean() {
   done
 }
 
-function center() {
-  termwidth="$(tput cols)"
-  padding="$(printf '%0.1s' -{1..500})"
-  printf '%*.*s %s %*.*s\n' 0 "$(((termwidth-2-${#1})/2))" "$padding" "$1" 0 "$(((termwidth-1-${#1})/2))" "$padding"
-}
-
 function print() (
   c1width=10
   cols=$(tput cols)
@@ -94,5 +88,3 @@ fi
   pacman $(echo "$1" | sed "s/y//g") ${@:2}
   exit 1
 fi
-
-
