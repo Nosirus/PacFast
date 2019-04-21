@@ -51,7 +51,7 @@ aria_monitor_log(){
         if [ -z "${ARIA2_GID}" ]
         then
             aria_get_rpc_gid $FILE
-            #p_comment 0 "Download indentifier is: ${ARIA2_GID}"
+            echo 0 "Download indentifier is: ${ARIA2_GID}" #p_comment
         fi
 
         if [ -n "${ARIA2_GID}" ]
@@ -60,17 +60,17 @@ aria_monitor_log(){
             SPEED=$(aria_get_rpc_speed $FILE)
             case $PROGRESS in
                     *100*)
-                            #p_comment 0  "Done with downloading file"
+                            echo 0  "Done with downloading file"
                             DONE=1
                     ;;                                                              
 
                     *)
-                            #p_comment 0 "Downloading: ${PROGRESS} percent at ${SPEED} bytes/sec"
+                            echo 0 "Downloading: ${PROGRESS} percent at ${SPEED} bytes/sec"
                             sleep 5
                     ;;
             esac
         else
-            #p_comment 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
+            echo 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
             sleep 10
         fi
     done 
