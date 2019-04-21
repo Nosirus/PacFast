@@ -5,7 +5,12 @@ SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
 ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
-trap ctrl_c INT
+#trap ctrl_c INT
+
+trap "exitcode=\$?; (find "$PacmanCache" -type f -name "*.aria2" | while read f ; do
+  name=$(basename "$f" .aria2)
+  rm -f "$PacmanCache$name" "$f";) && exit \$exitcode" 0;
+#trap "exit 1" 1 2 13 15;
 
 function ctrl_c() {
   clean
@@ -48,7 +53,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
   # Download unfinished jobs
   #[ -f "$LIST" ] && echo "Downloading unfinished jobs." && aria2c $ARIA2C
-  clean
+  #clean
 
   # Create new jobs
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
