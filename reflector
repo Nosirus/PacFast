@@ -28,7 +28,7 @@ trap "exit 1" 1 2 13 15;
 
 # file containing mirror urls
 #MIRRORS=`(mktemp -t reflector-mirrorsXXXX) 2>/dev/null` && test -w "$MIRRORS" || MIRRORS=~/reflector.mirrorsXXX
-
+MIRRORS=""
 # arch
 ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
 
