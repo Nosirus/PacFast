@@ -14,12 +14,12 @@ function get_mirrors () #{{{1
 
 function get_core_urls () #{{{1
 {
-   get_mirrors | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g"
+   get_mirrors && $MIRRORS | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g"
 }
 
 function get_gcc_urls () #{{{1
 {
-   get_mirrors | sed "s,$,core/os/${ARCH}/${GCC_URL},g"
+   get_mirrors && $MIRRORS  | sed "s,$,core/os/${ARCH}/${GCC_URL},g"
 }
 
 # rm tmp file on exit
