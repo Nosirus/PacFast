@@ -98,7 +98,13 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-parallel -a <(seq 0800 9999) -a <(seq 001 032) -P 8 curl $list
+for i in {0800..9999}; do
+    for j in {001..032}; do
+        wget $list &
+        while test $(jobs -p|wc -w) -ge 10; do sleep 0.1 ; done
+    done
+done
+
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
