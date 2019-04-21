@@ -98,29 +98,11 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-MAX_CONCURRENT=50
-n=0
-for i in {0800..9999}; do
-    for j in {001..032}; do
-        printf 'http://example.com/%s-%s.jpg\n' $i $j
+for i in {1..3}; do
+    for j in {10..20}; do
+        (wget http://example.com/"$i-$j".jpg &)
     done
-done \
-| while read url
-do
-    {
-        wget $list
-    } &
-    PIDS="$PIDS $!"
-
-    ((++n))
-    if test "$n" -ge "$MAX_CONCURRENT"
-    then
-        n=0
-        wait $PIDS
-        PIDS=""
-    fi
 done
-test -n "$PIDS" && wait $PIDS
 
   #aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
