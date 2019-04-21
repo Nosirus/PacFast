@@ -36,70 +36,6 @@ function print() (
   done
 )
 
-aria_get_rpc_progress() {
-    METAFILE=$1
-
-    if [ -n "${2}" ]
-    then
-        SCALE=$2
-    else
-        SCALE=0
-    fi
-
-    #first save some data
-    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellStatus $ARIA2_GID 2> $METAFILE.err > $METAFILE.rpc
-
-    TOTALSIZE=$(cat $METAFILE.rpc | grep "totalLength" -A1 -m1| grep Value | awk -F"'" '{print $2}')
-    COMPLETEDSIZE=$(cat $METAFILE.rpc | grep "completedLength" -A1 -m1| grep Value | awk -F "'" '{print $2}')
-
-    if [ -z "${TOTALSIZE}" -o -z "${COMPLETEDSIZE}" ]
-    then
-        echo 0
-    else
-        echo "$(echo "scale=$SCALE; $COMPLETEDSIZE * 100 / $TOTALSIZE"| bc)"
-    fi
-}
-
-aria_get_rpc_gid(){
-    /usr/bin/xmlrpc http://localhost:6800/rpc aria2.tellActive 2> $METAFILE.err > $METAFILE.rpc
-    ARIA2_GID=$(cat $METAFILE.rpc | grep "gid" -A1 -m1| grep Value | awk -F"'" '{print $2}')
-    export ARIA2_GID
-}
-
-aria_monitor_log(){
-    FILE="$list"
-
-    DONE=0
-    while [ $DONE -lt 1 ]
-    do              
-        if [ -z "${ARIA2_GID}" ]
-        then
-            aria_get_rpc_gid $FILE
-            echo 0 "Download indentifier is: ${ARIA2_GID}" #p_comment
-        fi
-
-        if [ -n "${ARIA2_GID}" ]
-        then
-            PROGRESS=$(aria_get_rpc_progress $FILE)
-            SPEED=$(aria_get_rpc_speed $FILE)
-            case $PROGRESS in
-                    *100*)
-                            echo 0  "Done with downloading file"
-                            DONE=1
-                    ;;                                                              
-
-                    *)
-                            echo 0 "Downloading: ${PROGRESS} percent at ${SPEED} bytes/sec"
-                            sleep 5
-                    ;;
-            esac
-        else
-            echo 0 "Unable to determine download progress, sleeping for 10 seconds before retrying"
-            sleep 10
-        fi
-    done 
-}
-
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
   ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
 fi
@@ -144,35 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  metafile=$1
-  metafile_log=/tmp/aria.log
-
-  aria2c $list -d "$PacmanCache" --enable-rpc --human-readable=false $metafile &> $metafile_log & #$ARIA2C
-  
-  aria_get_rpc_progress
- pid=$!
-    if [ ! -d /proc/$pid ]; then
-         logmsg "aria2c is not running"
-         shellout
-    fi
-
-    cntr=0
-
-    while : ; do
-        if [ -e $metafile_log ]; then
-    	    aria_monitor_log $metafile_log
-            break
-        else
-            cntr=$(($cntr+1))
-            sleep 5
-        fi
-
-        if [ $cntr -gt 5 ]; then
-            logmsg "Logfile could not be located, something is wrong!"
-            shellout
-        fi
-    done
-  
+  aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
   # Install package
