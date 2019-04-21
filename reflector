@@ -4,22 +4,20 @@
 function get_mirrors () #{{{1
 {
           curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
-          sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g' > $MIRRORS
-          #MIRRORS=$(sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g')
-          echo 1
+          #sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g' > $MIRRORS
+          MIRRORS=$(sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g')
           #cat $MIRRORS;
+          echo $MIRRORS
 }
 
 function get_core_urls () #{{{1
 {
    get_mirrors | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g"
-   echo 2
 }
 
 function get_gcc_urls () #{{{1
 {
    get_mirrors | sed "s,$,core/os/${ARCH}/${GCC_URL},g"
-   echo 3
 }
 
 # rm tmp file on exit
@@ -27,7 +25,7 @@ trap "exitcode=\$?; (rm -f \$MIRRORS 2>/dev/null;) && exit \$exitcode" 0;
 trap "exit 1" 1 2 13 15;
 
 # file containing mirror urls
-MIRRORS=`(mktemp -t reflector-mirrorsXXXX) 2>/dev/null` && test -w "$MIRRORS" || MIRRORS=~/reflector.mirrorsXXX
+#MIRRORS=`(mktemp -t reflector-mirrorsXXXX) 2>/dev/null` && test -w "$MIRRORS" || MIRRORS=~/reflector.mirrorsXXX
 
 # arch
 ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
