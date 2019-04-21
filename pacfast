@@ -43,7 +43,7 @@ aria_get_rpc_gid(){
 }
 
 aria_monitor_log(){
-    FILE=$name
+    FILE=$namever
 
     DONE=0
     while [ $DONE -lt 1 ]
