@@ -6,7 +6,8 @@ function get_mirrors () #{{{1
           cat $MIRRORS;
    else
           curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
-          sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g' > $MIRRORS
+          #sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g' > $MIRRORS
+          MIRRORS=${sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g'}
           cat $MIRRORS;
    fi
 }
