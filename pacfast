@@ -26,7 +26,7 @@ function center() {
 }
 
 function print() (
-  c1width=10
+  c1width=9
   cols=$(tput cols)
   c2width=$((cols - c1width - 1))
   readarray -t lines < <(printf '%s' "$2" | fmt -w $c2width)
