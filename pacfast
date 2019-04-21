@@ -1,6 +1,5 @@
 #!/bin/bash
 
-Cache=1
 PacmanCache=$(pacman-conf Cachedir)
 SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
 ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
