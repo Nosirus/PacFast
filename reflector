@@ -49,6 +49,7 @@ GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/nul
 
 #rm -f $destdir 
 #echo "$GCC_URL" >> $destdir 
-cat <<< "$GCC_URL" > /etc/pacman.d/mirrorlist
+#cat <<< "$GCC_URL" > /etc/pacman.d/mirrorlist
+printf 'template(%s)\n' ${GCC_URL} >> /etc/pacman.d/mirrorlist
 
 exit $?;
