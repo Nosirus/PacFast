@@ -52,7 +52,7 @@ GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/nul
    sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}"'/core.db.tar.gz,$repo/os/$arch,g'
 } | sed 's,^,Server = ,g' | awk '{ if (!h[$0]) { print $0; h[$0]=1 } }' | tee $PacmanMirrorlist # 
 
-printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Finished"
+printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Finished\n"
 
 exit 1
 #exit $?;
