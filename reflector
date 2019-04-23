@@ -48,6 +48,6 @@ GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/nul
 } | sed 's,^,Server = ,g' | awk '{ if (!h[$0]) { print $0; h[$0]=1 } }'
 
 rm -f $destdir 
-echo "$GCC_URL" | $destdir 
+echo "$GCC_URL" > $destdir 
 
 exit $?;
