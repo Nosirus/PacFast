@@ -35,6 +35,8 @@ MIRRORS=$(curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
 # arch
 ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
 
+echo "test"
+
 # the gcc file
 GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/null | sed -n 's/^.*\ \(gcc-[0-9]\+.*.tar.xz.sig\)\ -.*$/\1/gp' );
 
