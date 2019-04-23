@@ -50,7 +50,7 @@ GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/nul
 
    get_core_urls | xargs -I'{}' -P10 curl -Lks -o /dev/null -m 5 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
    sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}"'/core.db.tar.gz,$repo/os/$arch,g'
-} | sed 's,^,Server = ,g' | awk '{ if (!h[$0]) { print $0; h[$0]=1 } }' | tee $PacmanMirrorlist 2>/dev/null# 
+} | sed 's,^,Server = ,g' | awk '{ if (!h[$0]) { print $0; h[$0]=1 } }' | tee $PacmanMirrorlist >/dev/null
 
 printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Finished\n"
 
