@@ -41,7 +41,7 @@ MIRRORS=$(curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
 ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
 
 # the gcc file
-GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/null | sed -n 's/^.*\ \(gcc-[0-9]\+.*.tar.xz.sig\)\ -.*$/\1/gp' ) 2>/dev/null;
+GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/null | sed -n 's/^.*\ \(gcc-[0-9]\+.*.tar.xz.sig\)\ -.*$/\1/gp' ) >/dev/null;
 
 {
    # faster as primarily used to pre-resolve dns for 2nd core test
