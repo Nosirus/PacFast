@@ -43,8 +43,8 @@ MIRRORS=$(curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
 
 # the gcc file
 GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/null | sed -n 's/^.*\ \(gcc-[0-9]\+.*.tar.xz.sig\)\ -.*$/\1/gp' );
-gcc_urls=$(echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g")
-core_urls=$(echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g")
+gcc_urls=echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g"
+core_urls=echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g"
 {
    # faster as primarily used to pre-resolve dns for 2nd core test
    gcc_urls | xargs -I'{}' -P40 curl -Lks -o /dev/null -m 3 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
