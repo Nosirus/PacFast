@@ -1,10 +1,11 @@
 #!/bin/bash
-function get_core_urls () #{{{1
+
+function get_core_urls ()
 {
    echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g"
 }
 
-function get_gcc_urls () #{{{1
+function get_gcc_urls ()
 {
    echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g"
 }
