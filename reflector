@@ -36,7 +36,7 @@ echo "Please wait..."
 
 # var containing mirror urls
 #MIRRORS=$(curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
-          sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g')
+#          sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g')
 
 # arch
 ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
