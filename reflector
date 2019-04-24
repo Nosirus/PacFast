@@ -12,7 +12,7 @@ function get_gcc_urls ()
 
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
-echo -e "\n\e ${On_Green} PacFast ${On_White} Gets the fastest 40 servers \e[0m"
+echo -e "\n\e ${On_Green} PacFast ${On_White} Gets the fastest 40 mirrors \e[0m"
 echo "Please wait..."
 
 # arch
