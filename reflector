@@ -9,10 +9,6 @@ function get_gcc_urls () #{{{1
    echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g"
 }
 
-# rm tmp file on exit
-#trap "exitcode=\$?; (rm -f \$MIRRORS 2>/dev/null;) && exit \$exitcode" 0;
-#trap "exit 1" 1 2 13 15;
-
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
 echo -e "\n\e ${On_Green} PacFast ${On_White} Gets the fastest 40 servers \e[0m"
