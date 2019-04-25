@@ -5,6 +5,10 @@ SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
 ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
+NC='\033[0m' # No Color
+On_White='\e[1;30;107m'
+On_Green='\e[1;97;42m'
+
 trap ctrl_c INT
 
 function ctrl_c() {
@@ -71,10 +75,6 @@ if [ $( echo "$total > 1024" | bc ) = 1 ]; then
 		fi
 	fi
 fi
-
-  NC='\033[0m' # No Color
-  On_White='\e[1;30;107m'
-  On_Green='\e[1;97;42m'
 
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
