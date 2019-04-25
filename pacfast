@@ -80,7 +80,11 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  echo ${echo "$list"##*/}
+ url="$list"
+test=$(basename "$url"; basename -s .xz "$url"; dirname "$url")
+echo $test
+
+ 
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
