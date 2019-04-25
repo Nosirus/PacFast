@@ -80,7 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-some_variable="$( echo "$list" | sed -e 's#$repository' )"
+some_variable="$( echo "$list" | sed -e '$repository' )"
 echo $some_variable
   
   aria2c $list $ARIA2C
