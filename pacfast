@@ -57,7 +57,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   #name=$(pacman $@ --print --print-format "%n")
   #namever=$(pacman $@ --print --print-format "%n-%v")
   total=$(pacman $@ --print --print-format "%s" | awk '{size+=$list} END {print size}')
-  repository=$(pacman $@ --print --print-format "%r")
+  #repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$list" | wc -l)
   
   #namever=$(echo $list | sed -e 's!http[s]\?://\S*!!g')
@@ -80,8 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\-x86_64 *$//' | sed 's/\-any *$//'
-
+echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\-x86_64 *$//' | sed 's/\-any *$//' | sed 's/\+ *$//'
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
