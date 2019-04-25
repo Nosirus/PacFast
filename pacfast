@@ -80,8 +80,8 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-#echo "$list" | sed 's/.*\///' | sed 's/.*\///'
-echo "$list" | sed 's=.*/==;s/\.[^.]*$/.new_ext/'
+echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//'
+
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
