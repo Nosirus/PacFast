@@ -80,7 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
- url="$list"
+ url=$list
 test=$(basename "$url"; basename -s .xz "$url"; dirname "$url")
 echo $test
 
