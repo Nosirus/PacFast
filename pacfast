@@ -50,15 +50,13 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-  # Download unfinished jobs
-  #[ -f "$LIST" ] && echo "Downloading unfinished jobs." && aria2c $ARIA2C
-  #clean
+  clean
 
   # Create new jobs
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
   #name=$(pacman $@ --print --print-format "%n")
   namever=$(pacman $@ --print --print-format "%n-%v")
-  total=$(pacman $@ --print --print-format "%s" | awk '{print size}')
+  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$namever} END {print size}')
   #repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$namever" | wc -l)
   
