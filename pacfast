@@ -81,7 +81,7 @@ fi
   print "$optf" "$optd" && echo " "
   
  url=$list
-test=$(basename "$url"; basename -s .xz "$url"; dirname "$url")
+test=$(basename -s .xz "$url"; dirname "$url")
 echo $test
 
  
