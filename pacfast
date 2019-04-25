@@ -58,7 +58,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   namever=$(pacman $@ --print --print-format "%n-%v")
   total=$(pacman $@ --print --print-format "%s" | awk '{size+=$namever} END {print size}')
   #repository=$(pacman $@ --print --print-format "%r")
-  number=$(echo "$namever" | wc -l)
+  number=$(echo "$list" | wc -l)
   
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
