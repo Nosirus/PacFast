@@ -80,7 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-a=$list
+a="$list"
 printf '%s\n' "${a##*/}"
 
  
