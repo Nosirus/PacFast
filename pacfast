@@ -80,9 +80,8 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-url=$list
-echo "${url##*/}"
- 
+some_variable="$( echo "$list" | sed -e 's#^http://##; s#/score/$##' )"
+echo $some_variable
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
