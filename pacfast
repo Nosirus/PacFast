@@ -60,7 +60,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$list" | wc -l)
   
-  namever=$(echo $list | sed -e 's!http[s]\?://\S*!!g')
+  #namever=$(echo $list | sed -e 's!http[s]\?://\S*!!g')
   
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
@@ -79,6 +79,8 @@ fi
   echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
+  
+  echo $list |sed 's/https\?:\/\///'
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
