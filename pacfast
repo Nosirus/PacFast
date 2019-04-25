@@ -60,7 +60,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$list" | wc -l)
   
-  namever=$(echo "$list" | sed -e 's!http[s]\?://\S*!!g')
+  namever=$(echo $list | sed -e 's!http[s]\?://\S*!!g')
   
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
