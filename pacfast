@@ -80,7 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-  echo $list |sed 's/https\?:\/\///'
+  echo $list | sed -e 's!http[s]\?://\S*!!'
   
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
