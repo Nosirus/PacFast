@@ -80,7 +80,7 @@ fi
   optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
   print "$optf" "$optd" && echo " "
   
-echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\-x86_64 *$//' | sed 's/\-any *$//' | sed 's/+*\///'
+echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\-x86_64 *$//' | sed 's/\-any *$//'
 
   
   aria2c $list $ARIA2C
