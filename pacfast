@@ -81,7 +81,7 @@ fi
   print "$optf" "$optd" && echo " "
   
   ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
-optd=$(echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\${ARCH} *$//' | sed 's/\-any *$//' | xargs -n1 | sort | xargs | column -t)
+optd=$(echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\${ARCH} *$//' | sed 's/\-any *$//' | sed "s/$ARCH/g" | xargs -n1 | sort | xargs | column -t)
 print "$optf" "$optd" && echo " "
   
   aria2c $list $ARIA2C
