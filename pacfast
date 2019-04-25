@@ -82,7 +82,7 @@ fi
   
 a='$list'
 printf '%s\n' "${a##*/}"
-echo '$list' | rev | cut -d '/' -f 1 | rev
+echo $list | rev | cut -d '/' -f 1 | rev
  
   
   aria2c $list $ARIA2C
