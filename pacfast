@@ -48,7 +48,7 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
 
-if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy"; then
+if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy" && echo "$@" | grep -q "\-mirror" ; then
   echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
   pacman -Sy
 fi
