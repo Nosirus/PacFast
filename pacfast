@@ -50,7 +50,7 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-M" || echo "$@" | grep -q "\--mirror"; then
 echo "mirror"
-pacman -Sup | sed 's/.*\(\/.*\/os\/\)/\1/; /^\//!d'
+
 
 fi
 
@@ -94,6 +94,8 @@ print "$optf" "$optd" && echo " "
   aria2c $list $ARIA2C
   printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
   
+  
+  pacman -Sup | sed 's/.*\(\/.*\/os\/\)/\1/; /^\//!d'
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
   pacman $(echo "$1") ${@:2} # | sed "s/y//g"
