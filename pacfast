@@ -60,12 +60,11 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-  install=$(echo "$@" | sed 's/\-Sy *$//')
   clean
 
   # Create new jobs
-  list=$(pacman $install --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  total=$(pacman $install --print --print-format "%s" | awk '{size+=$1} END {print size}')
+  list=$(pacman $1 --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+  total=$(pacman $1 --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
   #repository=$(pacman $@ --print --print-format "%r")
   
@@ -96,6 +95,6 @@ print "$optf" "$optd" && echo " "
   
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
-  pacman $(echo $install | sed "s/y//g") ${@:2}
+  pacman $(echo "$1" | sed "s/y//g") ${@:2}
   exit 1
 fi
