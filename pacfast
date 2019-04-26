@@ -54,13 +54,14 @@ echo "mirror"
 
 fi
 
-if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy"; then
-  echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
-  pacman -Sy
-fi
+#if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy"; then
+#  echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
+#  pacman -Sy
+#fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
+  [ $(command -y pacman) ] || pacman -Sy
   clean
 
   # Create new jobs
