@@ -48,6 +48,10 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
 
+if [ $(command -v pacman) ] && echo "$@" | grep -q "\-y"; then
+ echo "test"
+fi
+
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
   clean
