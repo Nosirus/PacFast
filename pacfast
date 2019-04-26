@@ -51,6 +51,7 @@ fi
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy" || echo "$@" | grep -q "\--mirror" ; then
   echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
   pacman -Sy
+  exit 1
 fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
