@@ -96,6 +96,6 @@ print "$optf" "$optd" && echo " "
   
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" "$@" | sed "$SED"
-  pacman $(echo "$1" ) ${@:2} #| sed "s/y//g"
+  pacman $(echo $install | sed "s/y//g") ${@:2}
   exit 1
 fi
