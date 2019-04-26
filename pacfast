@@ -48,10 +48,14 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
 
-if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy" || echo "$@" | grep -q "\--mirror" ; then
+if [ $(command -v pacman) ] && echo "$@" | grep -q "\-M" || echo "$@" | grep -q "\--mirror"; then
+echo "mirror"
+
+fi
+
+if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy"; then
   echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
   pacman -Sy
-  exit 1
 fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
@@ -60,11 +64,9 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 
   # Create new jobs
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  #name=$(pacman $@ --print --print-format "%n")
-  #namever=$(pacman $@ --print --print-format "%n-%v")
   total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}')
-  #repository=$(pacman $@ --print --print-format "%r")
   number=$(echo "$list" | wc -l)
+  #repository=$(pacman $@ --print --print-format "%r")
   
   #namever=$(echo $list | sed -e 's!http[s]\?://\S*!!g')
   
