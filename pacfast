@@ -60,14 +60,14 @@ fi
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
   [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
-  [ -z ${@:2} ] || [ ${@:2} = "-M" >/dev/null ] && [[ $(echo "$1") != *"u"* ]] && ctrl_c
+  [ -z ${@:2} ] || [ ${@:2} = "-M" ] && [[ $(echo "$1") != *"u"* ]] && ctrl_c
 
 
 
   clean
   # Create new jobs
-  list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}')
+  list=$(pacman $test --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+  total=$(pacman $test --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
   #repository=$(pacman $@ --print --print-format "%r")
   
