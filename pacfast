@@ -48,7 +48,7 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
 
-if [ echo "$@" | grep -q "\-M" || echo "$@" | grep -q "\--mirror"; then
+if [ echo "$@" | grep -q "\-M"] || [echo "$@" | grep -q "\--mirror"]; then
 echo "mirror"
 fi
 
