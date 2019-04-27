@@ -62,6 +62,7 @@ fi
 #if [ $(echo "$1") ?? "y" ]; then
 if [[ $(echo "$1") == *"y"* ]]; then
 echo "test"
+else if
   clean
   exit 1
 
