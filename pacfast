@@ -72,8 +72,8 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ -z ${@:2} ] || [ ${@:2} = "-m" ] >/dev/null && ctrl_c
   clean
   # Create new jobs
-  list=$(pacman $test --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  total=$(pacman $test --print --print-format "%s" | awk '{size+=$1} END {print size}')
+  list=$(pacman ${@:2} --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+  total=$(pacman ${@:2} --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
   #repository=$(pacman $@ --print --print-format "%r")
   
