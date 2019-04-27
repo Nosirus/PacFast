@@ -62,12 +62,10 @@ echo "mirror"
 test=$(echo "$@" | sed 's/-m//g' | sed 's/--mirror//g')
 fi
 
-
-
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-    [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
-  [ -z ${@:2} ] || [ ${@:2} = "-m" ] >/dev/null && ctrl_c
+  [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
+  [ -z ${@:2} ] || [ ${@:2} = "-m" ] && ctrl_c
 
   clean
   # Create new jobs
