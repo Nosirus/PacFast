@@ -61,7 +61,10 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-[ "$@" = "y" ] || echo "Empty: No"
+if [ "$1" = "cool" ]
+then
+echo "Empty: No"
+fi
   clean
   exit 1
 
