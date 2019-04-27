@@ -62,7 +62,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   #[[ $(echo "$1") != *"u"* ]] && [ -z ${@:2} ] || [ $@ = "-M" ] && ctrl_c
 
 #test=$(echo $@ | sed 's/\-M *$//' | sed 's/\--mirror *$//')
-test=${$@//-M}
+test=$(echo ${@/\-M/}
 
   clean
   # Create new jobs
