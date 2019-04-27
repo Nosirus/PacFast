@@ -63,7 +63,8 @@ test=$(echo ${@:2} | sed "s/-m//g" | sed "s/--mirror//g")
 fi
 
 if [[ $(echo "$1") == *"y"* ]]; then
-echo "sync"
+  echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
+  pacman -Sy
 fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
