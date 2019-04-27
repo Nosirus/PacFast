@@ -48,11 +48,9 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 	[ "`whoami`" = "root" ] || exec sudo "$0" "$@"
 fi
 
-if [ echo "$@" | grep -q "\-M" || echo "$@" | grep -q "\--mirror"; then
-echo "mirror"
-
-
-fi
+#if [ echo "$@" | grep -q "\-M" || echo "$@" | grep -q "\--mirror"; then
+#echo "mirror"
+#fi
 
 #if [ $(command -v pacman) ] && echo "$@" | grep -q "\-Sy"; then
 #  echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
@@ -61,7 +59,7 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-if [ "$1" = "cool" ]
+if [ "$@" = "-Sy" ]
 then
 echo "Empty: No"
 fi
