@@ -58,7 +58,7 @@ fi
 #fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
-  [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
+  #[ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
 if [ "$@" = "-Sy" ]
 then
 echo "Empty: No"
