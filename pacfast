@@ -57,12 +57,15 @@ fi
 #  pacman -Sy
 #fi
 
+if [[ $@ == *"-m"* ]] | [[ $@ == *"--mirror"* ]]; then
+echo "mirror"
+fi
+
 #if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   #[ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
 #if [ $(echo "$1") ?? "y" ]; then
 if [[ $(echo "$1") == *"y"* ]]; then
 echo "test"
-else if
   clean
   exit 1
 
