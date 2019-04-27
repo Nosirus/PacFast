@@ -60,7 +60,7 @@ fi
 if [[ $@ == *"-m"* ]] || [[ $@ == *"--mirror"* ]]; then
 echo "mirror"
 
-test=$(echo "$@" | sed "s/-m//g")
+test=$(echo "$@" | sed "s/-m//g" | sed "s/--mirror//g")
 fi
 
 if [[ $(echo "$1") == *"y"* ]]; then
@@ -106,7 +106,7 @@ print "$optf" "$optd" && echo " "
 
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" ${@:2} | sed "$SED"
-  pacman $(echo "$1" | sed "s/y//g") ${@:2} | sed "s/-m//g"
+  pacman $(echo "$1" | sed "s/y//g") $test #${@:2}
   #pacman -S $test #${@:2}
   exit 1
 fi
