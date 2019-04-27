@@ -68,10 +68,10 @@ fi
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
   clean
-test=$(echo ${@:2} | sed "s/-m//g" | sed "s/--mirror//g")
+#test=$(echo ${@:2} | sed "s/-m//g" | sed "s/--mirror//g")
   # Create new jobs
-  list=$(pacman $test --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+" | sed 's/\-Sy *$//')
-  total=$(pacman $test --print --print-format "%s" | awk '{size+=$1} END {print size}')
+  list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+" | sed 's/\-Sy *$//')
+  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
   #repository=$(pacman $@ --print --print-format "%r")
   
