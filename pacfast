@@ -61,8 +61,7 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-  [ $(command -v pacman) ] && echo "$@" | grep -q "\y" || pacman -Sy
-
+  [[ $@ == 'y' ]] || pacman -Sy
   clean
 
   # Create new jobs
