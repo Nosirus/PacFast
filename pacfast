@@ -59,7 +59,7 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   #[ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-[ $1 = "-Sy" ] pacman -Sy
+[ "$1" = "-Sy" ] pacman -Sy
   clean
   exit 1
 
