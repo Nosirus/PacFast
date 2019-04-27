@@ -61,9 +61,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
   [[ $(echo "$1") != *"u"* ]] && [ -z ${@:2} ] || [ $@ = "-M" ] && ctrl_c
 
-#test=$(echo $@ | sed 's/\-M *$//' | sed 's/\--mirror *$//')
-test=$(echo ${$1//-M/})
-
+test=$(echo $@ | sed 's/\-M *$//' | sed 's/\--mirror *$//')
 
   clean
   # Create new jobs
