@@ -59,7 +59,7 @@ fi
 
 if [[ $@ == *"-m"* ]] || [[ $@ == *"--mirror"* ]]; then
 echo "mirror"
-$@=$@ | sed 's/\-m *$//'
+$@=$(echo "$1" | sed "s/-m//g")
 fi
 
 if [[ $(echo "$1") == *"y"* ]]; then
