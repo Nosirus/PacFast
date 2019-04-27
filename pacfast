@@ -61,8 +61,9 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
- [  -z "$@" ] && echo "$@" | grep -q "\y" || echo "Empty: No"
+[ "$@" = "y" ] || echo "Empty: No"
   clean
+  exit 1
 
   # Create new jobs
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+" | sed 's/\-Sy *$//')
