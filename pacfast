@@ -57,7 +57,7 @@ fi
 #  pacman -Sy
 #fi
 
-if [[ $@ == *"-m"* ]] | [[ $@ == *"--mirror"* ]]; then
+if [[ $@ == *"-m"* ]] || [[ $@ == *"--mirror"* ]]; then
 echo "mirror"
 fi
 
