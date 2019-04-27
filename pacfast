@@ -61,7 +61,8 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
   #[[ $(echo "$1") != *"u"* ]] && [ -z ${@:2} ] || [ $@ = "-M" ] && ctrl_c
 
-test=$(echo $@ | sed 's/\-M *$//' | sed 's/\--mirror *$//')
+#test=$(echo $@ | sed 's/\-M *$//' | sed 's/\--mirror *$//')
+test=${$@//-M}
 
   clean
   # Create new jobs
@@ -99,7 +100,9 @@ print "$optf" "$optd" && echo " "
 
   # Install package
   echo -e "\n\n\e[1;42m Installing: \e[0m" ${@:2} | sed "$SED"
+  #pacman $(echo "$1" | sed "s/y//g" | sed 's/-M//g') $test #${@:2}
   pacman $(echo "$1" | sed "s/y//g" | sed 's/-M//g') $test #${@:2}
+
   #pacman -S $test #${@:2}
   exit 1
 fi
