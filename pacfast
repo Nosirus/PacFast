@@ -62,18 +62,16 @@ echo "mirror"
 test=$(echo "$@" | sed 's/-m//g' | sed 's/--mirror//g')
 fi
 
-if [[ $(echo "$1") == *"y"* ]]; then
-  echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m"
-  pacman -Sy
-fi
+
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
   [ -z ${@:2} ] || [ ${@:2} = "-m" ] >/dev/null && ctrl_c
+  [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
   clean
   # Create new jobs
   list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}' | sed 's/-m//g')
+  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
   #repository=$(pacman $@ --print --print-format "%r")
   
