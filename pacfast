@@ -59,7 +59,8 @@ fi
 
 if [[ $@ == *"-m"* ]] || [[ $@ == *"--mirror"* ]]; then
 echo "mirror"
-$@=$(echo "$1" | sed "s/-m//g")
+
+test=$(echo "$1" | sed "s/-m//g")
 fi
 
 if [[ $(echo "$1") == *"y"* ]]; then
@@ -71,7 +72,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   clean
 
   # Create new jobs
-  list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+" | sed 's/\-Sy *$//')
+  list=$(pacman $test --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+" | sed 's/\-Sy *$//')
   total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
   #repository=$(pacman $@ --print --print-format "%r")
