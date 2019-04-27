@@ -61,7 +61,7 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-  [ echo "$@" | grep -q "\-Sy" ] | pacman -Sy
+  [ echo "$@" | grep -q "\y" ] || pacman -Sy
 
   clean
 
