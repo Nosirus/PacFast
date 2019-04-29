@@ -9,6 +9,8 @@ NC='\033[0m' # No Color
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
 
+ARCH=$(uname -m)
+
 trap ctrl_c INT
 
 function ctrl_c() {
@@ -23,7 +25,7 @@ function clean() {
   done
 }
 
-function print() (
+function print() {
   c1width=10
   cols=$(tput cols)
   c2width=$((cols - c1width - 1))
@@ -38,7 +40,15 @@ function print() (
     fi
     printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
   done
-)
+}
+
+function aria() {
+	echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
+	optd=$(echo "$list" | sed 's/.*\///' | sed 's/.pkg.tar.xz//g' | sed 's/-'$(echo $ARCH)'//g' | sed 's/-any//g' | xargs -n1 | sort | xargs | column -t)
+	print "$optf" "$optd" && echo " "
+	aria2c $list $ARIA2C
+	printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished" && echo
+}
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
   ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
@@ -49,22 +59,36 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 fi
 
 if [[ $@ == *"-M"* ]] || [[ $@ == *"--mirror"* ]]; then
-echo "mirror"
+	echo -e "\n\e ${On_Green} PacFast ${On_White} Gets the fastest 50 mirrors \e[0m"
+	echo "Please wait..."
+	
+	# var containing mirror urls
+	MIRRORS=$(curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
+    sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g')
+	
+	GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/null | sed -n 's/^.*\ \(gcc-[0-9]\+.*.tar.xz.sig\)\ -.*$/\1/gp' );
+	{
+   # faster as primarily used to pre-resolve dns for 2nd core test
+   echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g" | xargs -I'{}' -P40 curl -Lks -o /dev/null -m 3 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
+   sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}/${GCC_URL}"',$repo/os/$arch,g'
+
+   echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g" | xargs -I'{}' -P10 curl -Lks -o /dev/null -m 5 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
+   sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}"'/core.db.tar.gz,$repo/os/$arch,g'
+	} | sed 's,^,Server = ,g' | awk '{ if (!h[$0]) { print $0; h[$0]=1 } }' | tee /etc/pacman.d/mirrorlist >/dev/null
+	echo "Finish"
 fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
   [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-  [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
-  [ -z ${@:2} ] || [ $@ = "-M" ] && [[ $(echo $1) != *"u"* ]] && ctrl_c
-
-test=$(echo $@ | sed 's/\-M *$//' | sed 's/\--mirror *$//')
-
+  [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Syy
+  [[ -z ${@:2} || $(echo "${@:2}")  = "-M" ]]  && [[ $(echo $1) != *"u"*  ]] && ctrl_c #&& [[ $(echo $1) != *"u"* ]] || [ $@ = "-M" ]  || $(echo "$@") = *"-M"* 
   clean
+  
   # Create new jobs
-  list=$(pacman $@ --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  total=$(pacman $@ --print --print-format "%s" | awk '{size+=$1} END {print size}')
+  package=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
+  list=$(pacman -S $package --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+  total=$(pacman -S $package --print --print-format "%s" | awk '{size+=$1} END {print size}')
   number=$(echo "$list" | wc -l)
-  #repository=$(pacman $@ --print --print-format "%r")
   
 suffix='B'
 if [ $( echo "$total > 1024" | bc ) = 1 ]; then
@@ -80,23 +104,10 @@ if [ $( echo "$total > 1024" | bc ) = 1 ]; then
 	fi
 fi
 
-  echo -e "\n\e ${On_Green} PacFast ${On_White} Downloading $number Package(s) for a total size of $total $suffix \e[0m"
-  optd=$(echo $namever | xargs -n1 | sort | xargs | column -t)
-  print "$optf" "$optd" && echo " "
-  
-  ARCH=`(uname -m) 2>/dev/null` || ARCH=x86_64
-optd=$(echo "$list" | sed 's/.*\///' | sed 's/\.pkg.tar.xz *$//' | sed 's/\-x86_64 *$//' | sed 's/\-any *$//' | xargs -n1 | sort | xargs | column -t)
-print "$optf" "$optd" && echo " "
-
-  aria2c $list $ARIA2C
-  printf "%s\r%s%s" abcdefghijklmnopqrstuvwxyz $(tput el) "Download finished"
-  
-  
+[[ -z $list ]] || aria
 
   # Install package
-  echo -e "\n\n\e[1;42m Installing: \e[0m" ${@:2} | sed "$SED"
-  #pacman $(echo "$1" | sed "s/y//g") ${@:2}
-
-  pacman -S $test #${@:2}
+  echo -e "\n\e ${On_Green} PacFast ${On_White} Install package(s) \e[0m"
+  pacman $(echo "$1" | sed 's/y//g') $package
   exit 1
 fi
