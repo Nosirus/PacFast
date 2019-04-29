@@ -80,7 +80,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 	clean
 	
 	# Create new jobs
-	PACKAGE=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g') #| sed 's/-b .//g'
+	PACKAGE=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g' | sed 's/-b .//g')
 	LIST=$(pacman -S $PACKAGE --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
 	TOTAL=$(pacman -S $PACKAGE --print --print-format "%s" | awk '{size+=$1} END {print size}')
 	NUMBER=$(echo "$LIST" | wc -l)
