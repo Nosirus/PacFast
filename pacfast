@@ -18,7 +18,7 @@ function ctrl_c() {
 function clean() {
 	find "$PacmanCache" -type f -name "*.aria2" | while read f ; do
 	name=$(basename "$f" .aria2)
-	rm -f "$PacmanCache$name" "$f" #2>/dev/null #>/dev/null 2>&1
+	rm -f "$PacmanCache$name" "$f"
 	done
 }
 
