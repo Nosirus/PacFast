@@ -80,9 +80,10 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 	clean
 	
 	# Create new jobs
-	PACKAGE=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g' | sed 's/-Syw//g')
-	LIST=$(pacman -S $PACKAGE --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-	TOTAL=$(pacman -S $PACKAGE --print --print-format "%s" | awk '{size+=$1} END {print size}')
+	#PACKAGE=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
+	PACKAGE=$(echo $@ | sed 's/-M//g' | sed 's/--mirror//g')
+	LIST=$(pacman $PACKAGE --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+	TOTAL=$(pacman $PACKAGE --print --print-format "%s" | awk '{size+=$1} END {print size}')
 	NUMBER=$(echo "$LIST" | wc -l)
 
 	suffix='B'
@@ -104,6 +105,7 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 	# Install package
 	PACKAGE2=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
 	echo -e "\n\e ${On_Green} PacFast ${On_White} Install package(s) \e[0m"
-	pacman $(echo "$1" | sed 's/y//g') $PACKAGE2
+	#pacman $(echo "$1" | sed 's/y//g') $PACKAGE2
+	pacman $(echo "$1" | sed 's/y//g') ${@:2}
 	exit 1
 fi
