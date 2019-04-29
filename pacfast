@@ -5,7 +5,6 @@ SED='s/-S//g;s/yyu/Update system/g;s/-b . yw//g;s/--noconfirm//g;s/--needed//g'
 ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
 
-NC='\033[0m' # No Color
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
 
