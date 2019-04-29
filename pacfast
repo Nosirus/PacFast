@@ -30,7 +30,8 @@ function print() {
 	readarray -t lines < <(printf '%s' "$2" | fmt -w $c2width)
 	for((line=0; line < ${#lines[*]}; line++))
 	do
-		if [ $line -eq 0 ] then
+		if [ $line -eq 0 ]
+		then
 			col1="$1"
 		else
 			col1=" "
