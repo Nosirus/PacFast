@@ -76,8 +76,7 @@ fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 	[ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-	[[ $(echo "$1") == "y" ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
-	[[ $(echo "$1") == "yy" ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Force refresh of all package databases \e[0m" && pacman -Syy
+	[[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
 	[[ -z ${@:2} || $(echo "${@:2}") = "-M" ]]  && [[ $(echo $1) != *"u"* ]] && ctrl_c
 	clean
 
