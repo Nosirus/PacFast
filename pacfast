@@ -104,6 +104,6 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 
 	# Install package
 	echo -e "\n\e ${On_Green} PacFast ${On_White} Install package(s) \e[0m"
-	pacman $(echo "$1" | sed 's/y//g') $package
+	pacman $(echo "$1" | sed 's/y//g') $package --noprogressbar --quiet
 	exit 1
 fi
