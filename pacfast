@@ -79,6 +79,10 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 	[[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Sy
 	[[ -z ${@:2} || $(echo "${@:2}") = "-M" ]]  && [[ $(echo $1) != *"u"* ]] && ctrl_c
 	clean
+	
+	PacmanArch=$(pacman-conf Architecture)
+	echo $PacmanArch
+	exit 1
 
 	# Create new jobs
 	package=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
