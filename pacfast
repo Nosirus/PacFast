@@ -1,7 +1,7 @@
 #!/bin/bash
 PacmanCache=$(pacman-conf Cachedir)
 ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
-	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0 --retry-wait=0"
+	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0" #--retry-wait=0
 
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
@@ -104,6 +104,6 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 
 	# Install package
 	echo -e "\n\e ${On_Green} PacFast ${On_White} Install package(s) \e[0m"
-	pacman $(echo "$1" | sed 's/y//g') $package --noprogressbar --quiet
+	pacman $(echo "$1" | sed 's/y//g') $package
 	exit 1
 fi
