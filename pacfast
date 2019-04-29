@@ -1,12 +1,11 @@
 #!/bin/bash
-PacmanCache=$(pacman-conf Cachedir)
-ARIA2C="-d "$PacmanCache" -Z -c -s4 -k5M -x10 -j10 -t10 \
+CACHE=$(pacman-conf Cachedir)
+ARCH=$(pacman-conf Architecture)
+ARIA2C="-d "$CACHE" -Z -c -s4 -k5M -x10 -j10 -t10 \
 	--console-log-level=error --download-result=hide  --file-allocation=falloc --summary-interval=0" #--retry-wait=0
 
 On_White='\e[1;30;107m'
 On_Green='\e[1;97;42m'
-
-ARCH=$(uname -m)
 
 trap ctrl_c INT
 
@@ -16,9 +15,9 @@ function ctrl_c() {
 }
 
 function clean() {
-	find "$PacmanCache" -type f -name "*.aria2" | while read f ; do
+	find "$CACHE" -type f -name "*.aria2" | while read f ; do
 	name=$(basename "$f" .aria2)
-	rm -f "$PacmanCache$name" "$f"
+	rm -f "$CACHE$name" "$f"
 	done
 }
 
@@ -80,10 +79,6 @@ if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
 	[[ -z ${@:2} || $(echo "${@:2}") = "-M" ]]  && [[ $(echo $1) != *"u"* ]] && ctrl_c
 	clean
 	
-	PacmanArch=$(pacman-conf Architecture)
-	echo $PacmanArch
-	exit 1
-
 	# Create new jobs
 	package=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
 	list=$(pacman -S $package --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
