@@ -13,32 +13,31 @@ ARCH=$(uname -m)
 trap ctrl_c INT
 
 function ctrl_c() {
-  clean
-  exit 0
+	clean
+	exit 0
 }
 
 function clean() {
-  find "$PacmanCache" -type f -name "*.aria2" | while read f ; do
-  name=$(basename "$f" .aria2)
-  rm -f "$PacmanCache$name" "$f" #2>/dev/null #>/dev/null 2>&1
-  done
+	find "$PacmanCache" -type f -name "*.aria2" | while read f ; do
+	name=$(basename "$f" .aria2)
+	rm -f "$PacmanCache$name" "$f" #2>/dev/null #>/dev/null 2>&1
+	done
 }
 
 function print() {
-  c1width=10
-  cols=$(tput cols)
-  c2width=$((cols - c1width - 1))
-  readarray -t lines < <(printf '%s' "$2" | fmt -w $c2width)
-  for((line=0; line < ${#lines[*]}; line++))
-  do
-    if [ $line -eq 0 ]
-    then
-      col1="$1"
-    else
-      col1=" "
-    fi
-    printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
-  done
+	c1width=10
+	cols=$(tput cols)
+	c2width=$((cols - c1width - 1))
+	readarray -t lines < <(printf '%s' "$2" | fmt -w $c2width)
+	for((line=0; line < ${#lines[*]}; line++))
+	do
+		if [ $line -eq 0 ] then
+			col1="$1"
+		else
+			col1=" "
+		fi
+	printf "%-${c1width}s %-${c2width}s\n" "$col1" "${lines[line]}"
+	done
 }
 
 function aria() {
@@ -50,7 +49,7 @@ function aria() {
 }
 
 if ping -c 1 -W 1 8.8.8.8 2>/dev/null | grep -q -i "ttl"; then
-  ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
+	ARIA2C="$ARIA2C --async-dns-server=8.8.8.8"
 fi
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
@@ -60,53 +59,53 @@ fi
 if [[ $@ == *"-M"* ]] || [[ $@ == *"--mirror"* ]]; then
 	echo -e "\n\e ${On_Green} PacFast ${On_White} Gets the fastest 50 mirrors \e[0m"
 	echo "Please wait..."
-	
+
 	# var containing mirror urls
 	MIRRORS=$(curl -LksS -o - 'https://www.archlinux.org/mirrors/status/json/' | \
     sed 's,{,\n{,g' | sed -n '/rsync/d; /pct": 1.0/p' | sed 's,^.*"url": "\([^"]\+\)".*,\1,g')
-	
+
 	GCC_URL=$( curl -LksSH --url ftp://ftp.archlinux.org/core/os/${ARCH}/ 2>/dev/null | sed -n 's/^.*\ \(gcc-[0-9]\+.*.tar.xz.sig\)\ -.*$/\1/gp' );
 	{
-   # faster as primarily used to pre-resolve dns for 2nd core test
-   echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g" | xargs -I'{}' -P40 curl -Lks -o /dev/null -m 3 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
-   sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}/${GCC_URL}"',$repo/os/$arch,g'
+	# faster as primarily used to pre-resolve dns for 2nd core test
+	echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/${GCC_URL},g" | xargs -I'{}' -P40 curl -Lks -o /dev/null -m 3 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
+	sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}/${GCC_URL}"',$repo/os/$arch,g'
 
-   echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g" | xargs -I'{}' -P10 curl -Lks -o /dev/null -m 5 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
-   sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}"'/core.db.tar.gz,$repo/os/$arch,g'
+	echo "$MIRRORS" | sed "s,$,core/os/${ARCH}/core.db.tar.gz,g" | xargs -I'{}' -P10 curl -Lks -o /dev/null -m 5 --retry 0 --no-keepalive -w '%{time_total}@%{speed_download}@%{url_effective}\n' --url '{}' |\
+	sort -t@ -k2 -nr | head -n 50 | cut -d'@' -f3 | sed 's,core/os/'"${ARCH}"'/core.db.tar.gz,$repo/os/$arch,g'
 	} | sed 's,^,Server = ,g' | awk '{ if (!h[$0]) { print $0; h[$0]=1 } }' | tee /etc/pacman.d/mirrorlist >/dev/null
 	echo "Finish"
 fi
 
 if [ $(command -v pacman) ] && echo "$@" | grep -q "\-S"; then
-  [ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
-  [[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Syy
-  [[ -z ${@:2} || $(echo "${@:2}")  = "-M" ]]  && [[ $(echo $1) != *"u"*  ]] && ctrl_c #&& [[ $(echo $1) != *"u"* ]] || [ $@ = "-M" ]  || $(echo "$@") = *"-M"* 
-  clean
-  
-  # Create new jobs
-  package=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
-  list=$(pacman -S $package --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
-  total=$(pacman -S $package --print --print-format "%s" | awk '{size+=$1} END {print size}')
-  number=$(echo "$list" | wc -l)
-  
-suffix='B'
-if [ $( echo "$total > 1024" | bc ) = 1 ]; then
-        total=$( echo "scale=2; $total / 1024" | bc )
-        suffix='KiB'
-        if [ $( echo "$total > 1024" | bc ) = 1 ]; then
-                total=$( echo "scale=2; $total / 1024" | bc )
-                suffix='MiB'
+	[ $(command -v aria2c) ] || pacman -S --noconfirm --needed aria2
+	[[ $(echo "$1") == *"y"* ]] && echo -e "\n\e ${On_Green} PacFast ${On_White} Refresh of all package databases \e[0m" && pacman -Syy
+	[[ -z ${@:2} || $(echo "${@:2}")  = "-M" ]]  && [[ $(echo $1) != *"u"*  ]] && ctrl_c #&& [[ $(echo $1) != *"u"* ]] || [ $@ = "-M" ]  || $(echo "$@") = *"-M"*
+	clean
+
+	# Create new jobs
+	package=$(echo ${@:2} | sed 's/-M//g' | sed 's/--mirror//g')
+	list=$(pacman -S $package --print --print-format "%l" | grep -E -o -e "(ht|f)tp[s]?://[^\']+")
+	total=$(pacman -S $package --print --print-format "%s" | awk '{size+=$1} END {print size}')
+	number=$(echo "$list" | wc -l)
+
+	suffix='B'
+	if [ $( echo "$total > 1024" | bc ) = 1 ]; then
+		total=$( echo "scale=2; $total / 1024" | bc )
+		suffix='KiB'
 		if [ $( echo "$total > 1024" | bc ) = 1 ]; then
-		        total=$( echo "scale=2; $total / 1024" | bc )
-		        suffix='GiB'
+			total=$( echo "scale=2; $total / 1024" | bc )
+			suffix='MiB'
+			if [ $( echo "$total > 1024" | bc ) = 1 ]; then
+				total=$( echo "scale=2; $total / 1024" | bc )
+				suffix='GiB'
+			fi
 		fi
 	fi
-fi
 
-[[ -z $list ]] || aria
+	[[ -z $list ]] || aria
 
-  # Install package
-  echo -e "\n\e ${On_Green} PacFast ${On_White} Install package(s) \e[0m"
-  pacman $(echo "$1" | sed 's/y//g') $package
-  exit 1
+	# Install package
+	echo -e "\n\e ${On_Green} PacFast ${On_White} Install package(s) \e[0m"
+	pacman $(echo "$1" | sed 's/y//g') $package
+	exit 1
 fi
